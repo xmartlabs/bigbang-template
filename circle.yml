@@ -29,6 +29,8 @@ test:
       lintAllVersionsProductionDebug
       lintAllVersionsStagingDebug
       lintAllVersionsStagingRelease
+      detektCheck
+      detektFormat
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/{junit,detekt,lints}
     - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
