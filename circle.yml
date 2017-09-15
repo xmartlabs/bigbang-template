@@ -39,7 +39,7 @@ test:
       testAllVersionsStagingDebugUnitTest
       lintAllVersionsProductionRelease
       lintAllVersionsProductionDebug
-      lintAllVersionsStagingDebug 
+      lintAllVersionsStagingDebug
       lintAllVersionsStagingRelease
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/{junit,detekt,lints}
