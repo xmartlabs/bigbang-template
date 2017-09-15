@@ -11,22 +11,35 @@ dependencies:
     - if [ ! -e $ANDROID_HOME/tools/bin/sdkmanager ]; then echo y | android update sdk --no-ui --all --filter tools; fi
 
     # Pre-accept Android SDK components licenses
-    - echo y | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+    - mkdir "$ANDROID_HOME/licenses" || true
+    - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
 
     # Install all the required SDK components
-    - $ANDROID_HOME/tools/bin/sdkmanager tools platform-tools \
-      "build-tools;26.0.1" "extras;google;google_play_services" \
+    - $ANDROID_HOME/tools/bin/sdkmanager tools platform-tools
+      "build-tools;26.0.1" "extras;google;google_play_services"
       "extras;google;m2repository"
+
+  cache_directories:
+    # Android SDK
+    - /usr/local/android-sdk-linux/tools
+    - /usr/local/android-sdk-linux/platform-tools
+    - /usr/local/android-sdk-linux/build-tools
+    - /usr/local/android-sdk-linux/licenses
+    - /usr/local/android-sdk-linux/extras/google/m2repository
+
+    # Gradle caches
+    - /home/ubuntu/.gradle/caches/
+    - /home/ubuntu/.gradle/wrapper/
 
 test:
   override:
-    - ./gradlew testAllVersionsProductionDebugUnitTest \
-      testAllVersionsProductionReleaseUnitTest \
-      testAllVersionsStagingReleaseUnitTest \
-      testAllVersionsStagingDebugUnitTest \
-      lintAllVersionsProductionRelease \
-      lintAllVersionsProductionDebug \
-      lintAllVersionsStagingDebug \
+    - ./gradlew testAllVersionsProductionDebugUnitTest
+      testAllVersionsProductionReleaseUnitTest
+      testAllVersionsStagingReleaseUnitTest
+      testAllVersionsStagingDebugUnitTest
+      lintAllVersionsProductionRelease
+      lintAllVersionsProductionDebug
+      lintAllVersionsStagingDebug 
       lintAllVersionsStagingRelease
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/{junit,detekt,lints}
