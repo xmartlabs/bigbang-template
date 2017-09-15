@@ -4,29 +4,32 @@ machine:
 
 dependencies:
   pre:
-    - mkdir $ANDROID_HOME/licenses
-    - cp -r licenses/. $ANDROID_HOME/licenses
-    - echo y | android update sdk --no-ui -a --filter tools
-    - echo y | android update sdk --no-ui -a --filter platform-tools
-    - echo y | android update sdk --no-ui -a --filter build-tools-26.0.1
-    - echo y | android update sdk --no-ui -a --filter extra-google-google_play_services
-    - echo y | android update sdk --no-ui -a --filter extra-google-m2repository
-    - echo y | android update sdk --no-ui -a --filter extra-android-m2repository
+    # Remove any leftover lock from previous builds
+    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+    # Make sure we have the sdkmanager available, and update the Android SDK tools if not
+    - if [ ! -e $ANDROID_HOME/tools/bin/sdkmanager ]; then echo y | android update sdk --no-ui --all --filter tools; fi
+
+    # Pre-accept Android SDK components licenses
+    - echo y | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+
+    # Install all the required SDK components
+    - $ANDROID_HOME/tools/bin/sdkmanager tools platform-tools \
+      "build-tools;26.0.1" "extras;google;google_play_services" \
+      "extras;google;m2repository"
 
 test:
   override:
-    - ./gradlew testAllVersionsProductionDebugUnitTest
-    - ./gradlew testAllVersionsProductionReleaseUnitTest
-    - ./gradlew testAllVersionsStagingReleaseUnitTest
-    - ./gradlew testAllVersionsStagingDebugUnitTest
-    - ./gradlew lintAllVersionsProductionRelease
-    - ./gradlew lintAllVersionsProductionDebug
-    - ./gradlew lintAllVersionsStagingDebug
-    - ./gradlew lintAllVersionsStagingRelease
+    - ./gradlew testAllVersionsProductionDebugUnitTest \
+      testAllVersionsProductionReleaseUnitTest \
+      testAllVersionsStagingReleaseUnitTest \
+      testAllVersionsStagingDebugUnitTest \
+      lintAllVersionsProductionRelease \
+      lintAllVersionsProductionDebug \
+      lintAllVersionsStagingDebug \
+      lintAllVersionsStagingRelease
   post:
-    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - mkdir -p $CIRCLE_TEST_REPORTS/{junit,detekt,lints}
     - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-    - mkdir -p $CIRCLE_TEST_REPORTS/detekt/
     - find . -type f -regex ".*/templete/app/build/reports/detekt/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/detekt/ \;
-    - mkdir -p $CIRCLE_TEST_REPORTS/lints/
     - find . -type f -regex ".*/app/build/reports/.*html" -exec cp {} $CIRCLE_TEST_REPORTS/lints/ \;
