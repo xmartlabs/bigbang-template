@@ -1,0 +1,38 @@
+machine:
+  environment:
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+
+dependencies:
+  pre:
+    # Remove any leftover lock from previous builds
+    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+    # Make sure we have the sdkmanager available, and update the Android SDK tools if not
+    - if [ ! -e $ANDROID_HOME/tools/bin/sdkmanager ]; then echo y | android update sdk --no-ui --all --filter tools; fi
+
+    # Pre-accept Android SDK components licenses
+    - mkdir "$ANDROID_HOME/licenses" || true
+    - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+
+    # Install all the required SDK components
+    - $ANDROID_HOME/tools/bin/sdkmanager tools platform-tools
+      "build-tools;26.0.1" "extras;google;google_play_services"
+      "extras;google;m2repository"
+
+test:
+  override:
+    - ./gradlew testAllVersionsProductionDebugUnitTest
+      testAllVersionsProductionReleaseUnitTest
+      testAllVersionsStagingReleaseUnitTest
+      testAllVersionsStagingDebugUnitTest
+      lintAllVersionsProductionRelease
+      lintAllVersionsProductionDebug
+      lintAllVersionsStagingDebug
+      lintAllVersionsStagingRelease
+      detektCheck
+      detektFormat
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/{junit,detekt,lints}
+    - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+    - find . -type f -regex ".*/templete/app/build/reports/detekt/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/detekt/ \;
+    - find . -type f -regex ".*/app/build/reports/.*html" -exec cp {} $CIRCLE_TEST_REPORTS/lints/ \;
