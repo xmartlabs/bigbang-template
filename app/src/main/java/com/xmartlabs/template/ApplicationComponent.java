@@ -1,6 +1,5 @@
 package com.xmartlabs.template;
 
-import com.xmartlabs.bigbang.core.controller.SessionController;
 import com.xmartlabs.bigbang.core.controller.SharedPreferencesController;
 import com.xmartlabs.bigbang.core.module.CoreAndroidModule;
 import com.xmartlabs.bigbang.core.module.GsonModule;
@@ -11,8 +10,9 @@ import com.xmartlabs.bigbang.core.providers.AccessTokenProvider;
 import com.xmartlabs.bigbang.retrofit.module.RestServiceModule;
 import com.xmartlabs.bigbang.retrofit.module.ServiceGsonModule;
 import com.xmartlabs.template.controller.AuthController;
+import com.xmartlabs.template.controller.SessionController;
 import com.xmartlabs.template.module.ControllerModule;
-import com.xmartlabs.template.module.RestServiceModuleApi;
+import com.xmartlabs.template.module.RestServiceModuleAdditions;
 import com.xmartlabs.template.ui.StartActivity;
 import com.xmartlabs.template.ui.login.LoginActivity;
 import com.xmartlabs.template.ui.login.LoginFragment;
@@ -38,10 +38,10 @@ import dagger.Component;
     OkHttpModule.class,
     PicassoModule.class,
     RestServiceModule.class,
-    RestServiceModuleApi.class,
+    RestServiceModuleAdditions.class,
 })
 public interface ApplicationComponent {
-  void inject(App app);
+  void inject(TemplateApplication templateApplication);
 
   void inject(LoginActivity loginActivity);
   void inject(OnboardingActivity onboardingActivity);

@@ -29,10 +29,7 @@ test:
       lintAllVersionsProductionDebug
       lintAllVersionsStagingDebug
       lintAllVersionsStagingRelease
-      detektCheck
-      detektFormat
   post:
-    - mkdir -p $CIRCLE_TEST_REPORTS/{junit,detekt,lints}
+    - mkdir -p $CIRCLE_TEST_REPORTS/{junit,lints}
     - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-    - find . -type f -regex ".*/templete/app/build/reports/detekt/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/detekt/ \;
     - find . -type f -regex ".*/app/build/reports/.*html" -exec cp {} $CIRCLE_TEST_REPORTS/lints/ \;
