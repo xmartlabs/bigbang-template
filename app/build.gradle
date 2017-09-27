@@ -184,6 +184,6 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
     kapt "com.hannesdorfmann.fragmentargs:processor:${FRAGMENTARGS_VERSION}"
     kapt "org.parceler:parceler:${PARCELER_VERSION}"
-    provided 'javax.annotation:jsr250-api:1.0'
+    provided 'javax.annotation:jsr250-api:1.0-20050927'
     testCompile 'junit:junit:4.12'
 }
