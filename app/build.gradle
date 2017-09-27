@@ -120,7 +120,7 @@ android {
     }
 }
 
-final ANDROID_SUPPORT_VERSION = '26.0.1'
+final ANDROID_SUPPORT_VERSION = '26.1.0'
 final BULLET_VERSION = 'e5044b53df'
 final BIGBANG_VERSION = '75f26d1'
 final DAGGER_VERSION = '2.10'
