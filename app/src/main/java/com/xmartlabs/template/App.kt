@@ -3,7 +3,9 @@ package com.xmartlabs.template
 import android.app.Application
 import android.content.Context
 import android.os.Build
+import android.support.annotation.VisibleForTesting
 import android.support.multidex.MultiDex
+import bullet.ObjectGraph
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -22,10 +24,11 @@ import com.xmartlabs.template.module.ServiceGsonModule
 import timber.log.Timber
 import javax.inject.Inject
 
-class App : Application() {
+open class App : Application() {
   companion object {
     @Suppress("LateinitUsage")
     @JvmStatic lateinit var context: App
+      @VisibleForTesting internal set
   }
 
   @Inject
@@ -38,6 +41,7 @@ class App : Application() {
   internal lateinit var serviceErrorHandler: ServiceErrorHandler
 
   init {
+    @Suppress("LeakingThis")
     context = this
   }
 
@@ -64,14 +68,16 @@ class App : Application() {
     Injector.inject(this)
   }
 
-  private fun createComponent(): ApplicationComponent = DaggerApplicationComponent.builder()
+  @VisibleForTesting
+  protected open fun createComponent(): ApplicationComponent = DaggerApplicationComponent.builder()
       .coreAndroidModule(AndroidModule(this))
       .restServiceModule(RestServiceModule())
       .okHttpModule(OkHttpModule())
       .serviceGsonModule(ServiceGsonModule())
       .build()
 
-  private fun createBullet(component: ApplicationComponent) = BulletApplicationComponent(component)
+  @VisibleForTesting
+  protected open fun createBullet(component: ApplicationComponent): ObjectGraph = BulletApplicationComponent(component)
 
   private fun initializeDataBase() = FlowManager.init(FlowConfig.Builder(this).build())
 
