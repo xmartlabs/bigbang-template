@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
         classpath 'com.google.gms:google-services:3.1.1'
-        classpath 'io.fabric.tools:gradle:1.22.1'
+        classpath 'io.fabric.tools:gradle:1.24.2'
     }
 }
 
@@ -130,11 +130,11 @@ final FRAGMENTARGS_VERSION = '3.0.2'
 final KOTLIN_VERSION = '1.1.3-2'
 final LOCALDATE_BACKPORT_VERSION = '1.0.5'
 final MATERIAL_DIALOGS_VERSION = '0.9.4.7'
-final MULTIDEX_VERSION = '1.0.1'
+final MULTIDEX_VERSION = '1.0.2'
 final PARCELER_VERSION = '1.1.9'
 final RETROFIT_VERSION = '2.3.0'
 final RXANDROID_VERSION = '2.0.1'
-final RXJAVA_VERSION = '2.1.4'
+final RXJAVA_VERSION = '2.1.5'
 final RXLIFECYCLE_VERSION = '2.0.1'
 final TIMBER_VERSION = '4.5.1'
 final TRACEUR_VERSION = '273cc7d582'
