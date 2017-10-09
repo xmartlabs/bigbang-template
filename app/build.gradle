@@ -144,7 +144,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
+    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.2'
     compile "com.afollestad.material-dialogs:core:${MATERIAL_DIALOGS_VERSION}"
     compile "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
     compile "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
