@@ -136,7 +136,7 @@ final RETROFIT_VERSION = '2.2.0'
 final RXANDROID_VERSION = '2.0.1'
 final RXJAVA_VERSION = '2.1.5'
 final RXLIFECYCLE_VERSION = '2.0.1'
-final TIMBER_VERSION = '4.5.1'
+final TIMBER_VERSION = '4.6.0'
 final TRACEUR_VERSION = '273cc7d582'
 
 dependencies {
