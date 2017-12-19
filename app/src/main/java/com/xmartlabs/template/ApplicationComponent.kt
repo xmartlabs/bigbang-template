@@ -27,16 +27,16 @@ import com.xmartlabs.template.ui.StartActivity
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = arrayOf(
-    CoreAndroidModule::class,
-    ControllerModule::class,
-    GsonModule::class,
-    ServiceGsonModule::class,
-    OkHttpModule::class,
-    PicassoModule::class,
-    RestServiceModule::class,
-    RestServiceModuleApi::class
-))
+@Component(modules = [
+  ControllerModule::class,
+  CoreAndroidModule::class,
+  GsonModule::class,
+  OkHttpModule::class,
+  PicassoModule::class,
+  RestServiceModule::class,
+  RestServiceModuleApi::class,
+  ServiceGsonModule::class
+])
 @Singleton
 @SuppressWarnings("TooManyFunctions")
 interface ApplicationComponent {

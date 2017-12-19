@@ -15,17 +15,17 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(
-    MockAndroidModule::class,
-    MockControllerModule::class,
-    MockClockModule::class,
-    GsonModule::class,
-    ServiceGsonModule::class,
-    OkHttpModule::class,
-    PicassoModule::class,
-    RestServiceModule::class,
-    RestServiceModuleApi::class
-))
+@Component(modules = [
+  GsonModule::class,
+  MockAndroidModule::class,
+  MockClockModule::class,
+  MockControllerModule::class,
+  OkHttpModule::class,
+  PicassoModule::class,
+  RestServiceModule::class,
+  RestServiceModuleApi::class,
+  ServiceGsonModule::class
+])
 interface TestComponent : ApplicationComponent {
   fun inject(baseUnitTest: BaseUnitTest)
 
