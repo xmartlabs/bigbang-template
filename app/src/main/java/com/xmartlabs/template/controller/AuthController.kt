@@ -6,10 +6,11 @@ import com.xmartlabs.bigbang.core.controller.SessionController
 import com.xmartlabs.bigbang.core.providers.AccessTokenProvider
 import com.xmartlabs.template.model.Session
 import com.xmartlabs.template.service.AuthService
+import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-class AuthController : Controller() {
+open class AuthController : Controller() {
   @Inject
   internal lateinit var accessTokenProvider: AccessTokenProvider
   @Inject
@@ -26,4 +27,6 @@ class AuthController : Controller() {
         .toSingle()
         .map { Session(it.accessToken) }
         .doOnSuccess { sessionController.session = it }
+
+  open fun signIn() = Completable.error(NotImplementedError())
 }
