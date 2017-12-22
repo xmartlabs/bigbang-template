@@ -11,5 +11,6 @@ class RestServiceModule : CoreRestServiceModule() {
     private val BASE_URL = App.context.resources.getString(R.string.base_url)
   }
 
-  override fun provideBaseUrl(context: Context) = HttpUrl.parse(BASE_URL)
+  @Suppress("UnsafeCallOnNullableType")
+  override fun provideBaseUrl(context: Context): HttpUrl = HttpUrl.parse(BASE_URL)!!
 }
