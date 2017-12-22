@@ -5,9 +5,9 @@ jobs:
       - image: circleci/android:api-26-alpha
     working_directory: ~/bigbang-template
     environment:
-      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx3702m -XX:+HeapDumpOnOutOfMemoryError"'
-      _JAVA_OPTIONS: "-Xmx1500m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
-      JVM_OPTS: -Xmx1024m
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+      _JAVA_OPTIONS: "-Xmx2048m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
+      JVM_OPTS: -Xmx2048m
     resource_class: large
     steps:
       - checkout
