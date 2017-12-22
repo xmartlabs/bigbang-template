@@ -1,12 +1,14 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
         classpath 'com.google.gms:google-services:3.1.1'
-        classpath 'io.fabric.tools:gradle:1.24.2'
+        classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
+        classpath 'io.fabric.tools:gradle:1.25.1'
     }
 }
 
@@ -16,6 +18,8 @@ apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'project-report'
+apply plugin: 'spoon'
 
 apply from: '../detekt.gradle'
 
@@ -30,7 +34,7 @@ def getSignInformation = { keystorePath, keystorePropertyPath ->
         logger.error("Keystore properties file not found, path=${propertiesFile.absolutePath}")
         return
     }
-    def Properties properties = new Properties()
+    Properties properties = new Properties()
     properties.load(new FileInputStream(propertiesFile))
     return [
             storeFile    : keyStore,
@@ -41,16 +45,16 @@ def getSignInformation = { keystorePath, keystorePropertyPath ->
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.2'
     defaultConfig {
-        applicationId "com.xmartlabs.bigbang.template"
+        applicationId "com.xmartlabs.template"
         minSdkVersion 19
         multiDexEnabled true
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "${applicationId}.TestRunner"
     }
     dexOptions {
         javaMaxHeapSize '4g'
@@ -81,7 +85,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            // The sign process should be enabled to release
+            // signingConfig signingConfigs.release
         }
     }
     flavorDimensions 'version', 'env'
@@ -118,21 +123,41 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDirs += sharedTestDir
+        }
+        androidTest {
+            java.srcDirs += sharedTestDir
+        }
+    }
 }
 
+final ANDROID_SUPPORT_TEST_VERSION = '1.0.1'
 final ANDROID_SUPPORT_VERSION = '27.0.2'
+final BIGBANG_VERSION = '818536c5d4'
 final BULLET_VERSION = 'e5044b53df'
-final BIGBANG_VERSION = '75f26d1'
 final DAGGER_VERSION = '2.11'
-final DART_VERSION = '2.0.2'
+final DART_VERSION = '2.0.3'
 final DBFLOW_VERSION = '4.1.1'
+final ESPRESSO_VERSION = '3.0.1'
 final FRAGMENTARGS_VERSION = '3.0.2'
-final KOTLIN_VERSION = '1.1.3-2'
+final GSON_VERSION = '2.8.0'
+final JUNIT_VERSION = '4.12'
+final KOTLIN_VERSION = '1.2.0'
 final LOCALDATE_BACKPORT_VERSION = '1.0.5'
 final MATERIAL_DIALOGS_VERSION = '0.9.4.7'
+final MOCKITO_VERSION = '2.6.3'
 final MULTIDEX_VERSION = '1.0.2'
+final OK_HTTP_2_CURL_VERSION = '0.3.1'
+final OK_HTTP_IDLING_RESOURCE_VERSION = '1.0.0'
+final OK_HTTP_VERSION = '3.6.0'
+final OKIO_VERSION = '1.11.0'
 final PARCELER_VERSION = '1.1.9'
-final RETROFIT_VERSION = '2.2.0'
+final PICASSO_VERSION = '8c16e8564e'
+final REST_MOCK = '0.1.3'
+final RETROFIT_VERSION = '2.3.0'
 final RXANDROID_VERSION = '2.0.1'
 final RXJAVA_VERSION = '2.1.5'
 final RXLIFECYCLE_VERSION = '2.0.1'
@@ -140,43 +165,77 @@ final TIMBER_VERSION = '4.5.1'
 final TRACEUR_VERSION = '273cc7d582'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
+    androidTestImplementation "com.github.xmartlabs.bigbang:instrumental-test:${BIGBANG_VERSION}"
+    androidTestImplementation "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
+    androidTestImplementation "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
+    androidTestImplementation "com.android.support:support-v13:${ANDROID_SUPPORT_VERSION}"
+
+    androidTestImplementation "com.android.support:support-annotations:${ANDROID_SUPPORT_VERSION}"
+    androidTestImplementation "com.android.support.test:rules:${ANDROID_SUPPORT_TEST_VERSION}"
+    androidTestImplementation("com.android.support.test:runner:${ANDROID_SUPPORT_TEST_VERSION}") {
         exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
-    compile "com.afollestad.material-dialogs:core:${MATERIAL_DIALOGS_VERSION}"
-    compile "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
-    compile "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
-    compile "com.android.support:support-v13:${ANDROID_SUPPORT_VERSION}"
-    compile "com.android.support:multidex:${MULTIDEX_VERSION}"
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    }
+    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}") {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+    }
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}") {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
+
+    androidTestImplementation "com.android.support:support-annotations:${ANDROID_SUPPORT_VERSION}"
+    androidTestImplementation "com.github.andrzejchm.RESTMock:android:${REST_MOCK}"
+    androidTestImplementation "com.jakewharton.espresso:okhttp3-idling-resource:${OK_HTTP_IDLING_RESOURCE_VERSION}"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${OK_HTTP_VERSION}" // Added to prevent dependencies conflict between main and test
+    androidTestImplementation "com.squareup.okhttp3:okhttp:${OK_HTTP_VERSION}" // Added to prevent dependencies conflict between main and test
+    androidTestImplementation "com.squareup.okio:okio:${OKIO_VERSION}" // Added to prevent dependencies conflict between main and test
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.afollestad.material-dialogs:core:${MATERIAL_DIALOGS_VERSION}"
+    implementation "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
+    implementation "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
+    implementation "com.android.support:multidex:${MULTIDEX_VERSION}"
+    implementation "com.android.support:support-v13:${ANDROID_SUPPORT_VERSION}"
+    implementation("com.crashlytics.sdk.android:crashlytics:2.6.7@aar") {
         transitive = true
     }
-    compile "com.f2prateek.dart:dart:${DART_VERSION}"
-    compile "com.f2prateek.dart:henson:${DART_VERSION}"
-    compile "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW_VERSION}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW_VERSION}"
-    compile "com.github.tbroyer.bullet:bullet:${BULLET_VERSION}"
-    compile "com.github.xmartlabs.bigbang:core:${BIGBANG_VERSION}"
-    compile "com.github.xmartlabs.bigbang:dbflow:${BIGBANG_VERSION}"
-    compile "com.github.xmartlabs.bigbang:log-crashlytics:${BIGBANG_VERSION}"
-    compile "com.github.xmartlabs.bigbang:retrofit:${BIGBANG_VERSION}"
-    compile "com.github.xmartlabs.bigbang:ui:${BIGBANG_VERSION}"
-    compile "com.github.xmartlabs:Traceur:${TRACEUR_VERSION}"
-    compile "com.google.dagger:dagger:${DAGGER_VERSION}"
-    compile "com.hannesdorfmann.fragmentargs:annotation:${FRAGMENTARGS_VERSION}"
-    compile "com.hannesdorfmann.fragmentargs:bundler-parceler:${FRAGMENTARGS_VERSION}"
-    compile "com.jakewharton.threetenabp:threetenabp:${LOCALDATE_BACKPORT_VERSION}"
-    compile "com.jakewharton.timber:timber:${TIMBER_VERSION}"
-    compile "com.squareup.retrofit2:adapter-rxjava2:${RETROFIT_VERSION}"
-    compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
-    compile "com.trello.rxlifecycle2:rxlifecycle:${RXLIFECYCLE_VERSION}"
-    compile "com.trello.rxlifecycle2:rxlifecycle-components:${RXLIFECYCLE_VERSION}"
-    compile "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}"
-    compile "io.reactivex.rxjava2:rxjava:${RXJAVA_VERSION}"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:${KOTLIN_VERSION}"
-    compile "org.parceler:parceler:${PARCELER_VERSION}"
+    implementation "com.f2prateek.dart:dart:${DART_VERSION}"
+    implementation "com.f2prateek.dart:henson:${DART_VERSION}"
+    implementation "com.github.mrmike:Ok2Curl:${OK_HTTP_2_CURL_VERSION}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW_VERSION}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW_VERSION}"
+    implementation "com.github.square.picasso:picasso:${PICASSO_VERSION}"
+    implementation "com.github.tbroyer.bullet:bullet:${BULLET_VERSION}"
+    implementation "com.github.xmartlabs.bigbang:core:${BIGBANG_VERSION}"
+    implementation "com.github.xmartlabs.bigbang:dbflow:${BIGBANG_VERSION}"
+    implementation "com.github.xmartlabs.bigbang:log-crashlytics:${BIGBANG_VERSION}"
+    implementation "com.github.xmartlabs.bigbang:retrofit:${BIGBANG_VERSION}"
+    implementation "com.github.xmartlabs.bigbang:ui:${BIGBANG_VERSION}"
+    implementation "com.github.xmartlabs:Traceur:${TRACEUR_VERSION}"
+    implementation "com.google.code.gson:gson:${GSON_VERSION}"
+    implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
+    implementation "com.hannesdorfmann.fragmentargs:annotation:${FRAGMENTARGS_VERSION}"
+    implementation "com.hannesdorfmann.fragmentargs:bundler-parceler:${FRAGMENTARGS_VERSION}"
+    implementation "com.jakewharton.threetenabp:threetenabp:${LOCALDATE_BACKPORT_VERSION}"
+    implementation "com.jakewharton.timber:timber:${TIMBER_VERSION}"
+    implementation "com.squareup.okhttp3:okhttp:${OK_HTTP_VERSION}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${OK_HTTP_VERSION}"
+    implementation "com.squareup.okio:okio:${OKIO_VERSION}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${RETROFIT_VERSION}"
+    implementation "com.squareup.retrofit2:converter-gson:${RETROFIT_VERSION}"
+    implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components:${RXLIFECYCLE_VERSION}"
+    implementation "com.trello.rxlifecycle2:rxlifecycle:${RXLIFECYCLE_VERSION}"
+    implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}"
+    implementation "io.reactivex.rxjava2:rxjava:${RXJAVA_VERSION}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${KOTLIN_VERSION}"
+    implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
+
     kapt "com.f2prateek.dart:dart-processor:${DART_VERSION}"
     kapt "com.f2prateek.dart:henson-processor:${DART_VERSION}"
     kapt "com.github.tbroyer.bullet:bullet-compiler:${BULLET_VERSION}"
@@ -184,6 +243,25 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
     kapt "com.hannesdorfmann.fragmentargs:processor:${FRAGMENTARGS_VERSION}"
     kapt "org.parceler:parceler:${PARCELER_VERSION}"
-    provided 'javax.annotation:jsr250-api:1.0'
-    testCompile 'junit:junit:4.12'
+
+    kaptAndroidTest "com.github.tbroyer.bullet:bullet-compiler:${BULLET_VERSION}"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
+
+    kaptTest "com.github.tbroyer.bullet:bullet-compiler:${BULLET_VERSION}"
+    kaptTest "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
+
+    implementation 'javax.annotation:jsr250-api:1.0'
+
+    testImplementation "com.android.support:support-annotations:${ANDROID_SUPPORT_VERSION}"
+    testImplementation "com.github.andrzejchm.RESTMock:android:${REST_MOCK}"
+    testImplementation "com.squareup.okhttp3:okhttp:${OK_HTTP_VERSION}" // Added to prevent dependencies conflict between main and test
+    testImplementation "com.squareup.okio:okio:${OKIO_VERSION}" // Added to prevent dependencies conflict between main and test
+    testImplementation "com.squareup.okhttp3:mockwebserver:${OK_HTTP_VERSION}" // Added to prevent dependencies conflict between main and test
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation "org.mockito:mockito-core:${MOCKITO_VERSION}"
+}
+
+spoon {
+    debug = true
+    baseOutputDir = file("$projectDir/build/reports/spoon")
 }

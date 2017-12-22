@@ -6,7 +6,7 @@ import com.xmartlabs.bigbang.ui.common.parcel.ParcelerEnumTypeConverter
 import com.xmartlabs.template.R
 import org.parceler.Parcel
 
-@Parcel(converter=OnboardingPageTypeConverter::class)
+@Parcel(converter = OnboardingPageTypeConverter::class, value = Parcel.Serialization.BEAN)
 enum class OnboardingPage(@StringRes val title: Int, @StringRes val description: Int, @DrawableRes val image: Int) {
   //TODO: Replace texts and images for your onboarding
   FIRST(R.string.onboarding_title_1, R.string.onboarding_description_1, R.mipmap.ic_launcher),
