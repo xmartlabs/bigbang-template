@@ -17,12 +17,12 @@ class OnboardingPageFragment : BaseFragment() {
 
   override val layoutResId = R.layout.fragment_onboarding_page
 
-  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     title.setText(onboardingPage.title)
     description.setText(onboardingPage.description)
 
     @Suppress("DEPRECATION")
-    image.setImageDrawable(context.resources.getDrawable(onboardingPage.image))
+    image.setImageDrawable(view.context.resources.getDrawable(onboardingPage.image))
   }
 }

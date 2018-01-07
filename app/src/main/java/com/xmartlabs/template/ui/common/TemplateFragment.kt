@@ -17,12 +17,13 @@ abstract class TemplateFragment<V : TemplateView, P : MvpPresenter<V>> : BaseMvp
 
   override fun showError(message: Int, title: Int, buttonTitle: Int) {
     if (isViewAlive) {
-      MaterialDialog.Builder(context)
+      context?.let { MaterialDialog.Builder(it)
           .title(title)
           .content(message)
           .positiveText(buttonTitle)
           .build()
           .show()
+      }
     }
   }
 
