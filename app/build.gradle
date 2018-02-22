@@ -150,7 +150,7 @@ final LOCALDATE_BACKPORT_VERSION = '1.0.5'
 final MATERIAL_DIALOGS_VERSION = '0.9.6.0'
 final MOCKITO_VERSION = '2.15.0'
 final MULTIDEX_VERSION = '1.0.2'
-final OK_HTTP_2_CURL_VERSION = '0.4.3'
+final OK_HTTP_2_CURL_VERSION = '0.4.4'
 final OK_HTTP_IDLING_RESOURCE_VERSION = '1.0.0'
 final OK_HTTP_VERSION = '3.9.1'
 final OKIO_VERSION = '1.14.0'
@@ -158,7 +158,7 @@ final PARCELER_VERSION = '1.1.10'
 final PICASSO_VERSION = '8c16e8564e'
 final REST_MOCK = '0.3.1'
 final RETROFIT_VERSION = '2.3.0'
-final RXANDROID_VERSION = '2.0.1'
+final RXANDROID_VERSION = '2.0.2'
 final RXJAVA_VERSION = '2.1.9'
 final RXLIFECYCLE_VERSION = '2.2.1'
 final TIMBER_VERSION = '4.6.1'
@@ -201,7 +201,7 @@ dependencies {
     implementation "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
     implementation "com.android.support:multidex:${MULTIDEX_VERSION}"
     implementation "com.android.support:support-v13:${ANDROID_SUPPORT_VERSION}"
-    implementation("com.crashlytics.sdk.android:crashlytics:2.8.0@aar") {
+    implementation("com.crashlytics.sdk.android:crashlytics:2.9.0@aar") {
         transitive = true
     }
     implementation "com.f2prateek.dart:dart:${DART_VERSION}"
