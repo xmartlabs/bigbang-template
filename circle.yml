@@ -6,7 +6,7 @@ jobs:
     working_directory: ~/bigbang-template
     environment:
       GRADLE_OPTS: '-Dorg.gradle.parallel=false -Dorg.gradle.daemon=false'
-      _JAVA_OPTIONS: "-Xmx1400m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
+      _JAVA_OPTIONS: "-Xmx1024m"
     steps:
       - checkout
       - restore_cache:
