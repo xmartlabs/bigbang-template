@@ -56,9 +56,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "${applicationId}.TestRunner"
     }
-    dexOptions {
-        javaMaxHeapSize '4g'
-    }
     signingConfigs {
         //noinspection GroovyMissingReturnStatement
         debug {
