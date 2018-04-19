@@ -81,6 +81,10 @@ android {
             }
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -161,7 +165,7 @@ final RETROFIT_VERSION = '2.4.0'
 final RXANDROID_VERSION = '2.0.2'
 final RXJAVA_VERSION = '2.1.12'
 final RXLIFECYCLE_VERSION = '2.2.1'
-final TIMBER_VERSION = '4.6.1'
+final TIMBER_VERSION = '4.7.0'
 final TRACEUR_VERSION = '273cc7d582'
 
 dependencies {
