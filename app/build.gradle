@@ -56,9 +56,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "${applicationId}.TestRunner"
     }
-    dexOptions {
-        javaMaxHeapSize '4g'
-    }
     signingConfigs {
         //noinspection GroovyMissingReturnStatement
         debug {
@@ -80,10 +77,6 @@ android {
                 keyPassword signInformation.keyPassword
             }
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         release {
