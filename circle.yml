@@ -5,8 +5,7 @@ jobs:
       - image: circleci/android:api-26-alpha
     working_directory: ~/bigbang-template
     environment:
-      GRADLE_OPTS: '-Dorg.gradle.parallel=false -Dorg.gradle.daemon=false'
-      _JAVA_OPTIONS: "-Xmx1024m"
+      JVM_OPTS: -Xmx3200m
     resource_class: large
     steps:
       - checkout
