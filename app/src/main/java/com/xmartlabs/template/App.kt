@@ -36,7 +36,6 @@ open class App : Application(), HasActivityInjector {
 
   @Inject
   internal lateinit var buildInfo: BuildInfo
-
   @Inject
   internal lateinit var generalErrorHelper: GeneralErrorHelper
   @Inject
@@ -45,7 +44,7 @@ open class App : Application(), HasActivityInjector {
   internal lateinit var serviceErrorHandler: ServiceErrorHandler
   @Inject
   internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
-
+  internal lateinit var applicationComponent : ApplicationComponent
   init {
     @Suppress("LeakingThis")
     context = this
@@ -71,7 +70,8 @@ open class App : Application(), HasActivityInjector {
   }
 
   private fun initializeInjections() {
-    createComponent().inject(this)
+    applicationComponent = createComponent()
+    applicationComponent.inject(this)
     AppInjector.init(this)
   }
 

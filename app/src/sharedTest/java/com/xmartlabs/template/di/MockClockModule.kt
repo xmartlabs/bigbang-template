@@ -12,17 +12,18 @@ import javax.inject.Singleton
 @Module
 class MockClockModule {
   companion object {
-    internal val DEFAULT_TIME_ZONE = ZoneId.of("GMT-03:00")
+    internal val DEFAULT_TIME_ZONE_ID = ZoneId.of("GMT-03:00")
+    internal val DEFAULT_TIME_ZONE = TimeZone.getTimeZone(DEFAULT_TIME_ZONE_ID.id)
     private val DEFAULT_DATE = LocalDate.of(1991, Month.MARCH, 6)
     private val DEFAULT_TIME = LocalTime.of(11, 45)
-    internal val DEFAULT_ZONED_DATE_TIME = ZonedDateTime.of(DEFAULT_DATE, DEFAULT_TIME, DEFAULT_TIME_ZONE)
+    internal val DEFAULT_ZONED_DATE_TIME = ZonedDateTime.of(DEFAULT_DATE, DEFAULT_TIME, DEFAULT_TIME_ZONE_ID)
   }
 
   @Provides
   @Singleton
-  fun provideTimeZone(): TimeZone = TimeZone.getTimeZone(DEFAULT_TIME_ZONE.id)
+  fun provideTimeZone(): TimeZone = DEFAULT_TIME_ZONE
 
   @Provides
   @Singleton
-  fun provideClock() = Clock.fixed(DEFAULT_ZONED_DATE_TIME.toInstant(), DEFAULT_TIME_ZONE)
+  fun provideClock() = Clock.fixed(DEFAULT_ZONED_DATE_TIME.toInstant(), DEFAULT_TIME_ZONE_ID)
 }

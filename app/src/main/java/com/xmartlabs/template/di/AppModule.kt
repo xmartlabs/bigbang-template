@@ -1,12 +1,10 @@
 package com.xmartlabs.template.di
 
-import android.app.Application
-import com.xmartlabs.bigbang.core.model.BuildInfo  as CoreBuildInfo
-
+import com.xmartlabs.template.model.common.BuildInfo
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
-import com.xmartlabs.template.model.common.BuildInfo
+import com.xmartlabs.bigbang.core.model.BuildInfo as CoreBuildInfo
 
 @Module
 class AppModule {

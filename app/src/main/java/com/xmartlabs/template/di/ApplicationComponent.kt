@@ -8,11 +8,9 @@ import com.xmartlabs.bigbang.retrofit.module.RestServiceModule
 import com.xmartlabs.bigbang.retrofit.module.ServiceGsonModule
 import com.xmartlabs.template.App
 import com.xmartlabs.template.model.common.BuildInfo
-import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
-import okhttp3.HttpUrl
 import javax.inject.Singleton
 
 @Component(modules = [
