@@ -131,6 +131,7 @@ android {
     }
 }
 
+final LIFECYCLE_VERSION = '1.1.1'
 final ANDROID_SUPPORT_TEST_VERSION = '1.0.2'
 final ANDROID_SUPPORT_VERSION = '27.1.1'
 final BIGBANG_VERSION = '7270230d77'
@@ -190,6 +191,15 @@ dependencies {
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${OK_HTTP_VERSION}" // Added to prevent dependencies conflict between main and test
     androidTestImplementation "com.squareup.okhttp3:okhttp:${OK_HTTP_VERSION}" // Added to prevent dependencies conflict between main and test
     androidTestImplementation "com.squareup.okio:okio:${OKIO_VERSION}" // Added to prevent dependencies conflict between main and test
+
+    implementation "android.arch.lifecycle:extensions:$LIFECYCLE_VERSION"
+    implementation "android.arch.lifecycle:viewmodel:$LIFECYCLE_VERSION"
+    implementation "android.arch.lifecycle:livedata:$LIFECYCLE_VERSION"
+    implementation "android.arch.lifecycle:runtime:$LIFECYCLE_VERSION"
+    implementation "android.arch.lifecycle:reactivestreams:$LIFECYCLE_VERSION"
+    implementation "android.arch.paging:runtime:1.0.0"
+
+    kapt "android.arch.lifecycle:compiler:$LIFECYCLE_VERSION"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.afollestad.material-dialogs:core:${MATERIAL_DIALOGS_VERSION}"

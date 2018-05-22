@@ -24,6 +24,7 @@ import javax.inject.Singleton
   PicassoModule::class,
   RestServiceModule::class,
   RestServiceModuleApi::class,
+  ViewModelModule::class,
   ServiceGsonModule::class
 ])
 @Singleton
