@@ -5,11 +5,11 @@ import com.xmartlabs.bigbang.core.module.OkHttpModule
 import com.xmartlabs.bigbang.core.module.PicassoModule
 import com.xmartlabs.bigbang.retrofit.module.RestServiceModule
 import com.xmartlabs.bigbang.retrofit.module.ServiceGsonModule
-import com.xmartlabs.template.ApplicationComponent
-import com.xmartlabs.template.module.MockAndroidModule
-import com.xmartlabs.template.module.MockClockModule
-import com.xmartlabs.template.module.MockControllerModule
-import com.xmartlabs.template.module.RestServiceModuleApi
+import com.xmartlabs.template.di.ApplicationComponent
+import com.xmartlabs.template.di.MockAndroidModule
+import com.xmartlabs.template.di.MockClockModule
+import com.xmartlabs.template.di.MockControllerModule
+import com.xmartlabs.template.di.RestServiceModuleApi
 import com.xmartlabs.template.tests.signin.SignInUnitTest
 import dagger.Component
 import javax.inject.Singleton

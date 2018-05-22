@@ -1,11 +1,12 @@
 package com.xmartlabs.template
 
-import com.xmartlabs.template.module.AndroidModule
-import com.xmartlabs.template.module.MockRestServiceModule
+import com.xmartlabs.template.di.AppModule
+import com.xmartlabs.template.di.ApplicationComponent
+import com.xmartlabs.template.di.MockRestServiceModule
 
 class TestApplication : App() {
   override fun createComponent(): ApplicationComponent = DaggerInstrumentalTestComponent.builder()
-        .coreAndroidModule(AndroidModule(this))
+        .coreAndroidModule(AppModule(this))
         .restServiceModule(MockRestServiceModule())
         .build()
 

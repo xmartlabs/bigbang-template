@@ -1,4 +1,4 @@
-package com.xmartlabs.template.module
+package com.xmartlabs.template.di
 
 import dagger.Module
 import dagger.Provides

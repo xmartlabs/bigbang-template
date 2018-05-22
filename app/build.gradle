@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'com.google.gms:google-services:3.3.1'
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
         classpath 'io.fabric.tools:gradle:1.25.4'
     }
@@ -46,7 +46,7 @@ def getSignInformation = { keystorePath, keystorePropertyPath ->
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.xmartlabs.template"
         minSdkVersion 19
@@ -133,9 +133,8 @@ android {
 
 final ANDROID_SUPPORT_TEST_VERSION = '1.0.2'
 final ANDROID_SUPPORT_VERSION = '27.1.1'
-final BIGBANG_VERSION = '818536c5d4'
-final BULLET_VERSION = 'e5044b53df'
-final DAGGER_VERSION = '2.11'
+final BIGBANG_VERSION = '5f2570120b'
+final DAGGER_VERSION = '2.15'
 final DART_VERSION = '2.0.3'
 final DBFLOW_VERSION = '4.2.4'
 final ESPRESSO_VERSION = '3.0.1'
@@ -207,7 +206,6 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW_VERSION}"
     implementation "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW_VERSION}"
     implementation "com.github.square.picasso:picasso:${PICASSO_VERSION}"
-    implementation "com.github.tbroyer.bullet:bullet:${BULLET_VERSION}"
     implementation "com.github.xmartlabs.bigbang:core:${BIGBANG_VERSION}"
     implementation "com.github.xmartlabs.bigbang:dbflow:${BIGBANG_VERSION}"
     implementation "com.github.xmartlabs.bigbang:log-crashlytics:${BIGBANG_VERSION}"
@@ -216,6 +214,7 @@ dependencies {
     implementation "com.github.xmartlabs:Traceur:${TRACEUR_VERSION}"
     implementation "com.google.code.gson:gson:${GSON_VERSION}"
     implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
+    implementation "com.google.dagger:dagger-android-support:${DAGGER_VERSION}"
     implementation "com.hannesdorfmann.fragmentargs:annotation:${FRAGMENTARGS_VERSION}"
     implementation "com.hannesdorfmann.fragmentargs:bundler-parceler:${FRAGMENTARGS_VERSION}"
     implementation "com.jakewharton.threetenabp:threetenabp:${LOCALDATE_BACKPORT_VERSION}"
@@ -230,21 +229,21 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle:${RXLIFECYCLE_VERSION}"
     implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}"
     implementation "io.reactivex.rxjava2:rxjava:${RXJAVA_VERSION}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${KOTLIN_VERSION}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${KOTLIN_VERSION}"
     implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
 
     kapt "com.f2prateek.dart:dart-processor:${DART_VERSION}"
     kapt "com.f2prateek.dart:henson-processor:${DART_VERSION}"
-    kapt "com.github.tbroyer.bullet:bullet-compiler:${BULLET_VERSION}"
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW_VERSION}"
+    kapt "com.google.dagger:dagger-android-processor:${DAGGER_VERSION}"
     kapt "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
     kapt "com.hannesdorfmann.fragmentargs:processor:${FRAGMENTARGS_VERSION}"
     kapt "org.parceler:parceler:${PARCELER_VERSION}"
 
-    kaptAndroidTest "com.github.tbroyer.bullet:bullet-compiler:${BULLET_VERSION}"
+    kaptAndroidTest "com.google.dagger:dagger-android-processor:${DAGGER_VERSION}"
     kaptAndroidTest "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
-    kaptTest "com.github.tbroyer.bullet:bullet-compiler:${BULLET_VERSION}"
+    kaptTest "com.google.dagger:dagger-android-processor:${DAGGER_VERSION}"
     kaptTest "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
     implementation 'javax.annotation:jsr250-api:1.0'
