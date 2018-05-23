@@ -23,6 +23,7 @@ jobs:
           command: ./gradlew clean
               build
               assembleAndroidTest
+               --max-workers=2
       - run:
           name: Check Lints
           command: ./gradlew lint
@@ -42,6 +43,7 @@ jobs:
           - image: circleci/android:api-26-alpha
       environment:
         JVM_OPTS: -Xmx3200m
+      resource_class: large
       steps:
         - checkout
         - run:
