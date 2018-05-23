@@ -11,9 +11,11 @@ import javax.inject.Singleton
 class ControllerModule {
   @Provides
   @Singleton
-  internal fun provideSessionController(sharedPreferencesController: SharedPreferencesController) = SessionController(sharedPreferencesController)
+  internal fun provideSessionController(sharedPreferencesController: SharedPreferencesController)
+      = SessionController(sharedPreferencesController)
 
   @Provides
   @Singleton
-  internal fun provideCoreSessionController(sessionController: SessionController): CoreSessionController = sessionController
+  internal fun provideCoreSessionController(sessionController: SessionController): CoreSessionController
+      = sessionController
 }
