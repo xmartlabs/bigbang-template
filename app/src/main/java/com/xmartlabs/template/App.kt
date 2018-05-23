@@ -44,7 +44,9 @@ open class App : Application(), HasActivityInjector {
   internal lateinit var serviceErrorHandler: ServiceErrorHandler
   @Inject
   internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+  @Suppress("LateinitUsage")
   internal lateinit var applicationComponent : ApplicationComponent
+
   init {
     @Suppress("LeakingThis")
     context = this
