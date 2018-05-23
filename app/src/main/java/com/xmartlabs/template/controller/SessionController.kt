@@ -11,7 +11,7 @@ class SessionController @Inject constructor(sharedPreferencesController: SharedP
 
   var session
     get() = abstractSession as? Session?
-    set(value) {  value?.let { saveSession(it) } ?: deleteSession() }
+    set(value) { value?.let { saveSession(it) } ?: deleteSession() }
 
   fun update(block: (Session?) -> Session) { session = block(session) }
 }

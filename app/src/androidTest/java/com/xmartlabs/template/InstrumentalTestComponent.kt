@@ -22,19 +22,18 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [
-  AppModule::class,
   ActivityModule::class,
   AndroidInjectionModule::class,
   AndroidModule::class,
   AppModule::class,
   GsonModule::class,
+  MockClockModule::class,
+  MockControllerModule::class,
   OkHttpModule::class,
   PicassoModule::class,
   RestServiceModule::class,
   RestServiceModuleApi::class,
-  ServiceGsonModule::class,
-  MockControllerModule::class,
-  MockClockModule::class
+  ServiceGsonModule::class
 ])
 interface InstrumentalTestComponent : ApplicationComponent {
   @Component.Builder
