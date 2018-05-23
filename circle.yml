@@ -36,7 +36,7 @@ jobs:
           destination: reports
       - store_test_results:
           path: app/build/test-results
-  test_api_v16:
+  test_api_v19:
       working_directory: ~/bigbang-template
       docker:
           - image: circleci/android:api-26-alpha
@@ -49,7 +49,7 @@ jobs:
             command: yes | sdkmanager --licenses || true
         - run:
             name: Setup emulator
-            command: sdkmanager "system-images;android-16;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-16;default;armeabi-v7a"
+            command: sdkmanager "system-images;android-19;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-19;default;armeabi-v7a"
         - run:
             name: Change circle-android script file permissions
             command: sudo chmod +rx /bin/circle-android
@@ -78,6 +78,6 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - test_api_v16:
+      - test_api_v19:
           requires:
             - build
