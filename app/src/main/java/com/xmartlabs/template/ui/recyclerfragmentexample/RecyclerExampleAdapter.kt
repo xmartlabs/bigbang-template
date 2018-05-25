@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import com.xmartlabs.template.R
+import com.xmartlabs.template.ui.users.ListUsersAdapter
 
 internal class RecyclerExampleAdapter(private val items: List<String>)
   : RecyclerView.Adapter<RecyclerExampleAdapter.RecyclerExampleViewHolder>() {

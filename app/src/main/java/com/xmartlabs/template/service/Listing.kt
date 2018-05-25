@@ -18,7 +18,6 @@ package com.xmartlabs.template.service
 
 import android.arch.lifecycle.LiveData
 import android.arch.paging.PagedList
-import com.android.example.paging.pagingwithnetwork.reddit.repository.NetworkState
 
 /**
  * Data class that is necessary for a UI to show a listing and interact w/ the rest of the system

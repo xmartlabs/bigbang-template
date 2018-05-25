@@ -28,7 +28,7 @@
             />
 
         <activity
-            android:name=".ui.recyclerfragmentexample.RecyclerExampleActivity"
+            android:name=".ui.users.ListUsersActivity"
             android:label="@string/recycler_fragment_example"
             android:screenOrientation="portrait"
             />

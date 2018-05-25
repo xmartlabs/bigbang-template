@@ -4,6 +4,7 @@ import com.xmartlabs.template.ui.login.LoginFragment
 import com.xmartlabs.template.ui.onboarding.OnboardingFragment
 import com.xmartlabs.template.ui.onboarding.page.OnboardingPageFragment
 import com.xmartlabs.template.ui.recyclerfragmentexample.RecyclerExampleFragment
+import com.xmartlabs.template.ui.users.UsersFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -21,4 +22,7 @@ abstract class FragmentBuildersModule {
 
   @ContributesAndroidInjector
   abstract fun contributeRecyclerExampleFragment(): RecyclerExampleFragment
+
+  @ContributesAndroidInjector
+  abstract fun contributeUsersFragment(): UsersFragment
 }

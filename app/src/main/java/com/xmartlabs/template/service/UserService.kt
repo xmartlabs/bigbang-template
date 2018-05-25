@@ -21,7 +21,11 @@ interface UserService {
     const val GET_USER = BASE_URL
     const val GET_USER_ORGANIZATIONS = "$BASE_URL/orgs"
     const val GET_REPOSITORIES = "$BASE_URL/repos"
+    const val GET_SEARCH_USERS = "/search/users"
   }
+
+  @GET(GET_USER)
+  fun searchUsers(@Query("q") name: String, @Query("q") page: Int): Single<List<User>>
 
   @GET(GET_USER)
   fun getUser(): Single<User>
