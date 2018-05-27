@@ -1,12 +1,15 @@
 package com.xmartlabs.template.ui.users
 
 import android.arch.paging.PagedListAdapter
+import android.databinding.DataBindingUtil
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.xmartlabs.template.service.NetworkState
 import com.xmartlabs.template.R
+import com.xmartlabs.template.databinding.ItemUserBinding
 import com.xmartlabs.template.model.User
 
 class ListUsersAdapter(private val retryCallback: () -> Unit)
@@ -14,27 +17,15 @@ class ListUsersAdapter(private val retryCallback: () -> Unit)
   private var networkState: NetworkState? = null
   override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
     when (getItemViewType(position)) {
-      //R.layout.item_user -> (holder as UserViewHolder).bind(getItem(position))
+      R.layout.item_user -> (holder as UserViewHolder).bind(getItem(position))
       R.layout.network_state_item -> (holder as NetworkStateItemViewHolder).bindTo(
           networkState)
     }
   }
 
-  override fun onBindViewHolder(
-      holder: RecyclerView.ViewHolder,
-      position: Int,
-      payloads: MutableList<Any>) {
-    if (payloads.isNotEmpty()) {
-      val item = getItem(position)
-      //(holder as UserViewHolder).updateScore(item)
-    } else {
-      onBindViewHolder(holder, position)
-    }
-  }
-
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
     return when (viewType) {
-      R.layout.item_user -> UserViewHolder(parent)
+      R.layout.item_user -> UserViewHolder.create(parent)
       R.layout.network_state_item -> NetworkStateItemViewHolder.create(parent, retryCallback)
       else -> throw IllegalArgumentException("unknown view type $viewType")
     }
@@ -80,8 +71,24 @@ class ListUsersAdapter(private val retryCallback: () -> Unit)
     }
   }
 
-  class UserViewHolder(view: View)
-    : RecyclerView.ViewHolder(view) {
+  class UserViewHolder(val binding: ItemUserBinding)
+    : RecyclerView.ViewHolder(binding.root) {
 
+
+    companion object {
+      fun create(parent: ViewGroup): UserViewHolder {
+        val binding = DataBindingUtil.inflate<ItemUserBinding>(
+            LayoutInflater.from(parent.context),
+            R.layout.item_user,
+            parent,
+            false
+        )
+        return UserViewHolder(binding)
+      }
+    }
+
+    fun bind(user: User?){
+      binding.user = user
+    }
   }
 }

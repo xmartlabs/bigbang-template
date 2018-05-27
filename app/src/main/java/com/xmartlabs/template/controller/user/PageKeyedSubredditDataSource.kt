@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PageKeyedDataSource
 import com.xmartlabs.template.service.NetworkState
 import com.xmartlabs.template.model.User
+import com.xmartlabs.template.model.service.GhListResult
 import com.xmartlabs.template.service.UserService
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
@@ -47,11 +48,11 @@ class PageKeyedSubredditDataSource(
 
   override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, User>) {
     networkState.postValue(NetworkState.LOADING)
-    userService.searchUsers(name = userName, page = params.key)
-        .subscribe(object : SingleObserver<List<User>> {
-          override fun onSuccess(data: List<User>) {
+    userService.searchUsers(name = userName, page = params.key, pageSize = params.requestedLoadSize)
+        .subscribe(object : SingleObserver<GhListResult<User>> {
+          override fun onSuccess(data: GhListResult<User>) {
             retry = null
-            callback.onResult(data, params.key + 1)
+            callback.onResult(data.items, params.key + 1)
             networkState.postValue(NetworkState.LOADED)
           }
 
@@ -80,16 +81,13 @@ class PageKeyedSubredditDataSource(
     initialLoad.postValue(NetworkState.LOADING)
 
 
-    userService.searchUsers(
-        name = userName,
-        page = 1
-    )
-        .subscribe(object : SingleObserver<List<User>> {
-          override fun onSuccess(data: List<User>) {
+    userService.searchUsers(name = userName, page = 1, pageSize = params.requestedLoadSize)
+        .subscribe(object : SingleObserver<GhListResult<User>> {
+          override fun onSuccess(data: GhListResult<User>) {
             retry = null
             networkState.postValue(NetworkState.LOADED)
             initialLoad.postValue(NetworkState.LOADED)
-            callback.onResult(data, -1, 2)
+            callback.onResult(data.items, -1, 2)
           }
 
           override fun onSubscribe(d: Disposable) {

@@ -50,7 +50,7 @@ class LoginFragment : BaseFragment() {
 
   fun gotoRecyclerExampleActivity() {
     val intent = Henson.with(App.context)
-        .gotoRecyclerExampleActivity()
+        .gotoListUsersActivity()
         .build()
         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
     startActivity(intent)

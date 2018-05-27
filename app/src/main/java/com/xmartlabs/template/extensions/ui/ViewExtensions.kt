@@ -7,7 +7,7 @@ private const val ALPHA_OPAQUE = 1.0f
 
 fun View.setAnimatedVisibility(visible: Boolean, startDelay: Long = 0) {
   @Suppress("ComplexCondition")
-  if (visible && alpha == ALPHA_OPAQUE || !visible && alpha == ALPHA_INVISIBLE) {
+  if (visible && visibility == View.VISIBLE || !visible && visibility != View.VISIBLE) {
     return
   }
   visibility = View.VISIBLE
@@ -15,6 +15,7 @@ fun View.setAnimatedVisibility(visible: Boolean, startDelay: Long = 0) {
   animate()
       .alpha(if (visible) ALPHA_OPAQUE else ALPHA_INVISIBLE)
       .setStartDelay(startDelay)
+      .withEndAction({ visibility = if (visible) View.VISIBLE else View.INVISIBLE })
       .start()
 }
 

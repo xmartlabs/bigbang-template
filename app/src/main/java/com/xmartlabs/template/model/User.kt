@@ -7,9 +7,8 @@ import org.parceler.Parcel
 
 import java.util.ArrayList
 
-class User : EntityWithId<Long> {
-  override var id: Long = -1
-  @SerializedName("login")
-  internal var name: String? = null
-  internal var organizations: List<Organization> = ArrayList()
-}
+data class User(
+    override var id: Long = -1,
+    @SerializedName("login") var name: String? = null,
+    var avatarUrl: String? = null
+) : EntityWithId<Long>

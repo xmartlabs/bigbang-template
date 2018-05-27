@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Template</string>
     <!--TODO: Replace base url with the correct url-->
-    <string name="base_url" translatable="false">https://xmartlabs.com/</string>
+    <string name="base_url" translatable="false">https://api.github.com/</string>
 
     <string name="skip">Skip</string>
     <string name="start">Start</string>

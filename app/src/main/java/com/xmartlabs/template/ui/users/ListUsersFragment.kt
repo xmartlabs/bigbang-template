@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_list_users.*
 import javax.inject.Inject
 
 @FragmentWithArgs
-class UsersFragment : BaseFragment() {
+class ListUsersFragment : BaseFragment() {
   @Inject
   lateinit var model: ListUsersViewModel
 
