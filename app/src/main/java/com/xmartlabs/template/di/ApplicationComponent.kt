@@ -37,6 +37,8 @@ interface ApplicationComponent {
     @BindsInstance
     fun buildInfo(buildInfo: BuildInfo): Builder
 
+    fun restServiceGsonModule(serviceGsonModule: ServiceGsonModule): Builder
+
     fun restServiceModule(restService: RestServiceModule): Builder
 
     fun okHttpModule(okHttpModule: OkHttpModule): Builder

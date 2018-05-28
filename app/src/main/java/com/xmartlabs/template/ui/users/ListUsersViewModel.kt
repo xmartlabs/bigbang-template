@@ -3,7 +3,7 @@ package com.xmartlabs.template.ui.users
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import com.xmartlabs.template.controller.user.UserRepository
+import com.xmartlabs.template.repository.user.UserRepository
 import javax.inject.Inject
 
 class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : ViewModel(){
@@ -19,11 +19,11 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
     repoResult.value?.refresh?.invoke()
   }
 
-  fun showSubreddit(subreddit: String): Boolean {
-    if (userName.value == subreddit) {
+  fun showUsers(username: String): Boolean {
+    if (userName.value == username) {
       return false
     }
-    userName.value = subreddit
+    userName.value = username
     return true
   }
 
@@ -31,6 +31,4 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
     val listing = repoResult?.value
     listing?.retry?.invoke()
   }
-
-  fun currentSubreddit(): String? = userName.value
 }

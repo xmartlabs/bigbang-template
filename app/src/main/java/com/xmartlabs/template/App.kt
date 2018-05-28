@@ -20,6 +20,7 @@ import com.xmartlabs.template.di.ApplicationComponent
 import com.xmartlabs.template.di.DaggerApplicationComponent
 import com.xmartlabs.template.di.OkHttpModule
 import com.xmartlabs.template.di.RestServiceModule
+import com.xmartlabs.template.di.ServiceGsonModule
 import com.xmartlabs.template.model.common.BuildInfo
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -82,6 +83,7 @@ open class App : Application(), HasActivityInjector {
       .application(this)
       .buildInfo(BuildInfo())
       .okHttpModule(OkHttpModule())
+      .restServiceGsonModule(ServiceGsonModule())
       .restServiceModule(RestServiceModule())
       .build()
 

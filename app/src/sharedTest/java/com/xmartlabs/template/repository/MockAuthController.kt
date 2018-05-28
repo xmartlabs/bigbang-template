@@ -1,4 +1,4 @@
-package com.xmartlabs.template.controller
+package com.xmartlabs.template.repository
 
 import com.xmartlabs.template.service.AuthService
 import io.reactivex.Completable

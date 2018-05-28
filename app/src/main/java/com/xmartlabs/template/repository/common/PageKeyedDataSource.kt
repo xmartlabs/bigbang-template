@@ -1,56 +1,35 @@
-package com.xmartlabs.template.controller.user
+package com.xmartlabs.template.repository.common
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PageKeyedDataSource
+import com.xmartlabs.bigbang.core.extensions.subscribeOnIo
+import com.xmartlabs.template.model.service.ListResponse
 import com.xmartlabs.template.service.NetworkState
-import com.xmartlabs.template.model.User
-import com.xmartlabs.template.model.service.GhListResult
-import com.xmartlabs.template.service.UserService
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 
-/**
- * A data source that uses the before/after keys returned in page requests.
- * <p>
- * See ItemKeyedSubredditDataSource
- */
-class PageKeyedSubredditDataSource(
-    private val userService: UserService,
-    private val userName: String
-) : PageKeyedDataSource<Int, User>() {
-
-  // keep a function reference for the retry event
+class PageKeyedDataSource<T>(private val pageFetcher: PageFetcher<T>) : PageKeyedDataSource<Int, T>() {
   private var retry: (() -> Any)? = null
-
-  /**
-   * There is no sync on the state because paging will always call loadInitial first then wait
-   * for it to return some success value before calling loadAfter.
-   */
   val networkState = MutableLiveData<NetworkState>()
-
   val initialLoad = MutableLiveData<NetworkState>()
 
   fun retryAllFailed() {
     val prevRetry = retry
     retry = null
-    prevRetry?.let {
-      /*retryExecutor.execute {
-          it.invoke()
-      }*/
-    }
+    prevRetry?.invoke()
   }
 
   override fun loadBefore(
       params: LoadParams<Int>,
-      callback: LoadCallback<Int, User>) {
-    // ignored, since we only ever append to our initial load
+      callback: LoadCallback<Int, T>) {
   }
 
-  override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, User>) {
+  override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
     networkState.postValue(NetworkState.LOADING)
-    userService.searchUsers(name = userName, page = params.key, pageSize = params.requestedLoadSize)
-        .subscribe(object : SingleObserver<GhListResult<User>> {
-          override fun onSuccess(data: GhListResult<User>) {
+    pageFetcher.getPage(page = params.key, pageSize = params.requestedLoadSize)
+        .subscribeOnIo()
+        .subscribe(object : SingleObserver<ListResponse<T>> {
+          override fun onSuccess(data: ListResponse<T>) {
             retry = null
             callback.onResult(data.items, params.key + 1)
             networkState.postValue(NetworkState.LOADED)
@@ -65,25 +44,17 @@ class PageKeyedSubredditDataSource(
               loadAfter(params, callback)
             }
             networkState.postValue(NetworkState.error(t.message ?: "unknown err"))
-
-/*
-            networkState.postValue(
-                NetworkState.error("error code: ${response.code()}"))
-*/
           }
         })
   }
 
-  override fun loadInitial(
-      params: LoadInitialParams<Int>,
-      callback: LoadInitialCallback<Int, User>) {
+  override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, T>) {
     networkState.postValue(NetworkState.LOADING)
     initialLoad.postValue(NetworkState.LOADING)
-
-
-    userService.searchUsers(name = userName, page = 1, pageSize = params.requestedLoadSize)
-        .subscribe(object : SingleObserver<GhListResult<User>> {
-          override fun onSuccess(data: GhListResult<User>) {
+    pageFetcher.getPage(page = 1, pageSize = params.requestedLoadSize)
+        .subscribeOnIo()
+        .subscribe(object : SingleObserver<ListResponse<T>> {
+          override fun onSuccess(data: ListResponse<T>) {
             retry = null
             networkState.postValue(NetworkState.LOADED)
             initialLoad.postValue(NetworkState.LOADED)

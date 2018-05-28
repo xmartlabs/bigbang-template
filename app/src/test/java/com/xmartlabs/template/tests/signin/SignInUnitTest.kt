@@ -3,7 +3,7 @@ package com.xmartlabs.template.tests.signin
 import com.xmartlabs.template.App
 import com.xmartlabs.template.R
 import com.xmartlabs.template.common.BaseUnitTest
-import com.xmartlabs.template.controller.AuthController
+import com.xmartlabs.template.repository.AuthController
 import com.xmartlabs.template.service.AuthService
 import io.appflate.restmock.RESTMockServer
 import io.appflate.restmock.RequestsVerifier

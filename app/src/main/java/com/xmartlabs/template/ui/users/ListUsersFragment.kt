@@ -7,11 +7,11 @@ import android.support.annotation.LayoutRes
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import com.xmartlabs.template.service.NetworkState
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 import com.xmartlabs.bigbang.ui.BaseFragment
 import com.xmartlabs.template.R
 import com.xmartlabs.template.model.User
+import com.xmartlabs.template.service.NetworkState
 import kotlinx.android.synthetic.main.fragment_list_users.*
 import javax.inject.Inject
 
@@ -53,7 +53,7 @@ class ListUsersFragment : BaseFragment() {
   private fun initSearch() {
     input.setOnEditorActionListener({ _, actionId, _ ->
       if (actionId == EditorInfo.IME_ACTION_GO) {
-        updatedSubredditFromInput()
+        updatedUsernameFromInput()
         true
       } else {
         false
@@ -61,7 +61,7 @@ class ListUsersFragment : BaseFragment() {
     })
     input.setOnKeyListener({ _, keyCode, event ->
       if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-        updatedSubredditFromInput()
+        updatedUsernameFromInput()
         true
       } else {
         false
@@ -69,10 +69,10 @@ class ListUsersFragment : BaseFragment() {
     })
   }
 
-  private fun updatedSubredditFromInput() {
+  private fun updatedUsernameFromInput() {
     input.text.trim().toString().let {
       if (it.isNotEmpty()) {
-        if (model.showSubreddit(it)) {
+        if (model.showUsers(it)) {
           list.scrollToPosition(0)
           (list.adapter as? ListUsersAdapter)?.submitList(null)
         }

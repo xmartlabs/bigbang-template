@@ -2,9 +2,9 @@ package com.xmartlabs.template.di
 
 import com.xmartlabs.bigbang.core.controller.CoreSessionController
 import com.xmartlabs.bigbang.core.controller.SharedPreferencesController
-import com.xmartlabs.template.controller.AuthController
-import com.xmartlabs.template.controller.MockAuthController
-import com.xmartlabs.template.controller.SessionController
+import com.xmartlabs.template.repository.AuthController
+import com.xmartlabs.template.repository.MockAuthController
+import com.xmartlabs.template.repository.SessionController
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

@@ -2,7 +2,7 @@ package com.xmartlabs.template.di
 
 import com.xmartlabs.bigbang.core.controller.CoreSessionController
 import com.xmartlabs.bigbang.core.controller.SharedPreferencesController
-import com.xmartlabs.template.controller.SessionController
+import com.xmartlabs.template.repository.SessionController
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

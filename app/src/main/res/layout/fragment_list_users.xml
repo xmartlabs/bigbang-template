@@ -2,12 +2,10 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.android.example.paging.pagingwithnetwork.reddit.ui.RedditActivity"
     >
 
     <android.support.design.widget.TextInputLayout
@@ -26,7 +24,6 @@
             android:hint="User name"
             android:imeOptions="actionSearch"
             android:inputType="textNoSuggestions"
-            tools:text="androiddev"
             />
 
     </android.support.design.widget.TextInputLayout>
@@ -42,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            app:layoutManager="LinearLayoutManager"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             />
 
     </android.support.v4.widget.SwipeRefreshLayout>

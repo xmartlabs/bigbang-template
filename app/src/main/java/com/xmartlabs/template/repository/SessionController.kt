@@ -1,4 +1,4 @@
-package com.xmartlabs.template.controller
+package com.xmartlabs.template.repository
 
 import com.xmartlabs.bigbang.core.controller.CoreSessionController
 import com.xmartlabs.bigbang.core.controller.SharedPreferencesController
