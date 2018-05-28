@@ -1,4 +1,4 @@
-package com.xmartlabs.template.module
+package com.xmartlabs.template.di
 
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder

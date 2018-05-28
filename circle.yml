@@ -23,6 +23,7 @@ jobs:
           command: ./gradlew clean
               build
               assembleAndroidTest
+               --max-workers=2
       - run:
           name: Check Lints
           command: ./gradlew lint
