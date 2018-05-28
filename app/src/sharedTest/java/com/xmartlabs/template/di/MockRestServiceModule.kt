@@ -1,4 +1,4 @@
-package com.xmartlabs.template.module
+package com.xmartlabs.template.di
 
 import android.content.Context
 import com.xmartlabs.bigbang.retrofit.module.RestServiceModule

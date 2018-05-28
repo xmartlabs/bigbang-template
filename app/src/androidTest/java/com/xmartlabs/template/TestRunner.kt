@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.test.espresso.IdlingRegistry
 import android.support.test.runner.AndroidJUnitRunner
 import com.jakewharton.espresso.OkHttp3IdlingResource
-import com.xmartlabs.bigbang.core.Injector
 import com.xmartlabs.bigbang.core.module.OkHttpModule
 import com.xmartlabs.template.common.ImmediateNewThreadScheduler
 import io.appflate.restmock.RESTMockServerStarter
@@ -57,8 +56,8 @@ class TestRunner : AndroidJUnitRunner() {
 
   override fun callApplicationOnCreate(app: Application) {
     super.callApplicationOnCreate(app)
-
-    Injector.inject(this)
+    ((app as TestApplication).applicationComponent as InstrumentalTestComponent)
+        .inject(this)
     TimeZone.setDefault(mockedTimeZone)
 
     val picassoIdlingResource = OkHttp3IdlingResource.create(picassoClientIdleName, picassoOkHttpClient)

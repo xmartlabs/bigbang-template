@@ -5,7 +5,6 @@ import android.app.Instrumentation
 import android.support.annotation.CallSuper
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.xmartlabs.bigbang.core.Injector
 import com.xmartlabs.bigbang.test.extensions.getFirstActivityInstance
 import io.appflate.restmock.RESTMockServer
 import org.junit.Before
@@ -19,7 +18,6 @@ abstract class BaseInstrumentationTest {
   @CallSuper
   fun setUp() {
     instrumentation = InstrumentationRegistry.getInstrumentation()
-    Injector.inject(this)
     RESTMockServer.reset()
   }
 
