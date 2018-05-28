@@ -4,7 +4,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PageKeyedDataSource
 import com.xmartlabs.bigbang.core.extensions.subscribeOnIo
 import com.xmartlabs.template.model.service.ListResponse
-import com.xmartlabs.template.service.NetworkState
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 

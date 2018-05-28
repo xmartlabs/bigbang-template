@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.xmartlabs.template.service.NetworkState
+import com.xmartlabs.template.repository.common.NetworkState
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 import com.xmartlabs.bigbang.ui.BaseFragment
 import com.xmartlabs.template.App

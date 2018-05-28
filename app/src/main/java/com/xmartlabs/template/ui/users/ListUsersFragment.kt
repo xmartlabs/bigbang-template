@@ -11,7 +11,7 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 import com.xmartlabs.bigbang.ui.BaseFragment
 import com.xmartlabs.template.R
 import com.xmartlabs.template.model.User
-import com.xmartlabs.template.service.NetworkState
+import com.xmartlabs.template.repository.common.NetworkState
 import kotlinx.android.synthetic.main.fragment_list_users.*
 import javax.inject.Inject
 

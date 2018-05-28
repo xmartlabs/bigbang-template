@@ -8,10 +8,10 @@
 
         <variable
             name="networkState"
-            type="com.xmartlabs.template.service.NetworkState"
+            type="com.xmartlabs.template.repository.common.NetworkState"
             />
 
-        <import type="com.xmartlabs.template.service.Status" />
+        <import type="com.xmartlabs.template.repository.common.Status" />
 
     </data>
 

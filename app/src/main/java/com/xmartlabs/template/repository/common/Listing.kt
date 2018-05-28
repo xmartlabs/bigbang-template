@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.xmartlabs.template.service
+package com.xmartlabs.template.repository.common
 
 import android.arch.lifecycle.LiveData
 import android.arch.paging.PagedList

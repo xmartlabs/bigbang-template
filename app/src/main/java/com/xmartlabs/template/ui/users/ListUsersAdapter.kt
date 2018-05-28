@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.xmartlabs.template.R
 import com.xmartlabs.template.databinding.ItemUserBinding
 import com.xmartlabs.template.model.User
-import com.xmartlabs.template.service.NetworkState
+import com.xmartlabs.template.repository.common.NetworkState
 
 class ListUsersAdapter(private val retryCallback: () -> Unit)
   : PagedListAdapter<User, RecyclerView.ViewHolder>(USER_COMPARATOR) {

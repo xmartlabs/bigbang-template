@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.os.Handler
-import com.xmartlabs.template.service.NetworkState
+import com.xmartlabs.template.repository.common.NetworkState
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor() : ViewModel() {

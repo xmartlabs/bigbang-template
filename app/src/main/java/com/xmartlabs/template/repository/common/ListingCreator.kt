@@ -2,7 +2,6 @@ package com.xmartlabs.template.repository.common
 
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
-import com.xmartlabs.template.service.Listing
 
 /**
  * Created by mirland on 28/05/18.

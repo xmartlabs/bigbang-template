@@ -5,7 +5,7 @@ import com.xmartlabs.template.model.User
 import com.xmartlabs.template.model.service.ListResponse
 import com.xmartlabs.template.repository.common.ListingCreator
 import com.xmartlabs.template.repository.common.PageFetcher
-import com.xmartlabs.template.service.Listing
+import com.xmartlabs.template.repository.common.Listing
 import com.xmartlabs.template.service.UserService
 import io.reactivex.Single
 import javax.inject.Inject

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.xmartlabs.template.R
 import com.xmartlabs.template.databinding.NetworkStateItemBinding
-import com.xmartlabs.template.service.NetworkState
+import com.xmartlabs.template.repository.common.NetworkState
 
 /**
  * A View Holder that can display a loading or have click action.
