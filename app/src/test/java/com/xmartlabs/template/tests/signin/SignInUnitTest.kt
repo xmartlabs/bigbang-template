@@ -1,6 +1,5 @@
 package com.xmartlabs.template.tests.signin
 
-import android.support.test.runner.AndroidJUnit4
 import com.xmartlabs.template.App
 import com.xmartlabs.template.R
 import com.xmartlabs.template.common.BaseUnitTest
@@ -13,7 +12,6 @@ import okhttp3.mockwebserver.MockResponse
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import javax.inject.Inject
 
 class SignInUnitTest : BaseUnitTest() {
@@ -25,6 +23,11 @@ class SignInUnitTest : BaseUnitTest() {
   @Inject
   internal lateinit var authController: AuthController
 
+  override fun setUp() {
+    super.setUp()
+    testComponent.inject(this)
+  }
+
   @Test
   fun signInTest() {
     authController.signIn().blockingAwait()
@@ -35,7 +38,8 @@ class SignInUnitTest : BaseUnitTest() {
     RESTMockServer.whenRequested(POST_ACCESS_TOKEN_MATCHER)
         .thenReturn(MockResponse().setResponseCode(411))
 
-    authController.accessToken.toCompletable()
+    authController.accessToken
+        .ignoreElement()
         .onErrorComplete()
         .blockingAwait()
 

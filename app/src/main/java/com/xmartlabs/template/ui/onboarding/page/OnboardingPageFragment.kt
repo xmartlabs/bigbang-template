@@ -7,7 +7,6 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 import com.hannesdorfmann.fragmentargs.bundler.ParcelerArgsBundler
 import com.xmartlabs.bigbang.ui.BaseFragment
 import com.xmartlabs.template.R
-
 import kotlinx.android.synthetic.main.fragment_onboarding_page.*
 
 @FragmentWithArgs
