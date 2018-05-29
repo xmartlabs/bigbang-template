@@ -9,7 +9,7 @@ import javax.inject.Inject
 class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : ViewModel(){
   private val userName = MutableLiveData<String>()
   private val repoResult = Transformations.map(userName, {
-    userRepository.getUsersListing(it, 30)
+    userRepository.searchServiceUsers(it, 30)
   })
   val posts = Transformations.switchMap(repoResult, { it.pagedList })!!
   val networkState = Transformations.switchMap(repoResult, { it.networkState })!!

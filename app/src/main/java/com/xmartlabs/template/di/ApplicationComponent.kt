@@ -19,6 +19,7 @@ import javax.inject.Singleton
   AndroidModule::class,
   AppModule::class,
   ControllerModule::class,
+  DbModule::class,
   GsonModule::class,
   OkHttpModule::class,
   PicassoModule::class,
