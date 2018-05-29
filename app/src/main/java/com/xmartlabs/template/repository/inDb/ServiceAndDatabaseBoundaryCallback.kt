@@ -20,7 +20,7 @@ class ServiceAndDatabaseBoundaryCallback<T>(private val pageFetcher: PageFetcher
                                             private val networkPageSize: Int,
                                             private val ioExecutor: Executor) : PagedList.BoundaryCallback<T>() {
 
-  val page = 0
+  var page = 1
   val helper = PagingRequestHelper(ioExecutor)
   val networkState = helper.createStatusLiveData()
 
@@ -31,6 +31,7 @@ class ServiceAndDatabaseBoundaryCallback<T>(private val pageFetcher: PageFetcher
   override fun onZeroItemsLoaded() {
     helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
       pageFetcher.getPage(page = page, pageSize = networkPageSize * 3)
+          .createWebserviceCallback(it)
     }
   }
 
@@ -41,6 +42,7 @@ class ServiceAndDatabaseBoundaryCallback<T>(private val pageFetcher: PageFetcher
   override fun onItemAtEndLoaded(itemAtEnd: T) {
     helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
       pageFetcher.getPage(page = page, pageSize = networkPageSize * 3)
+          .createWebserviceCallback(it)
     }
   }
 
@@ -54,6 +56,7 @@ class ServiceAndDatabaseBoundaryCallback<T>(private val pageFetcher: PageFetcher
         .observeOnIo()
         .subscribe(object : SingleObserver<ListResponse<T>> {
           override fun onSuccess(data: ListResponse<T>) {
+            page++
             handleResponse(data)
             callback.recordSuccess()
           }

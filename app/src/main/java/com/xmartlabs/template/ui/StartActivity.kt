@@ -18,10 +18,13 @@ class StartActivity : BaseAppCompatActivity() {
     val session = sessionController.session
     if (session == null) {
       //TODO: handle on start activity no session
-      val intent = Henson.with(context)
-          .gotoOnboardingActivity()
-          .build()
-          .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//      val intent = Henson.with(context)
+//          .gotoOnboardingActivity()
+//          .build()
+//          .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+    val intent = Henson.with(context)
+        .gotoListUsersActivity()
+        .build()
       startActivity(intent)
     } else {
       TODO("Handle on start activity with session")

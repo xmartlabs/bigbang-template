@@ -164,6 +164,7 @@ final ROOM_VERSION = "1.1.0"
 final RXLIFECYCLE_VERSION = '2.2.1'
 final TIMBER_VERSION = '4.7.0'
 final TRACEUR_VERSION = '273cc7d582'
+final STETHO_VERSION = '1.5.0'
 
 dependencies {
     androidTestImplementation "com.github.xmartlabs.bigbang:instrumental-test:${BIGBANG_VERSION}"
@@ -204,11 +205,15 @@ dependencies {
     implementation "android.arch.paging:runtime:1.0.0"
 
     implementation "android.arch.persistence.room:runtime:$ROOM_VERSION"
-    annotationProcessor "android.arch.persistence.room:compiler:$ROOM_VERSION"
+    kapt "android.arch.persistence.room:compiler:$ROOM_VERSION"
     //implementation "android.arch.persistence.room:rxjava2:$ROOM_VERSION"
 
     kapt "android.arch.lifecycle:compiler:$LIFECYCLE_VERSION"
     kapt 'com.android.databinding:compiler:3.1.2'
+
+    implementation "com.facebook.stetho:stetho:$STETHO_VERSION"
+    implementation "com.facebook.stetho:stetho-okhttp3:$STETHO_VERSION"
+
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.afollestad.material-dialogs:core:${MATERIAL_DIALOGS_VERSION}"

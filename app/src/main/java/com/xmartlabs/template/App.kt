@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import android.support.annotation.VisibleForTesting
 import android.support.multidex.MultiDex
+import com.facebook.stetho.Stetho
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -70,6 +71,7 @@ open class App : Application(), HasActivityInjector {
     initializeDataBase()
     initializeRxErrorHandler()
     initializeLogging() // Crashlytics initialization should go at the end.
+    Stetho.initializeWithDefaults(this);
   }
 
   private fun initializeInjections() {
