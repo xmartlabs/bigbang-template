@@ -62,7 +62,6 @@ class UserRepository @Inject constructor(
     }
     return ServiceAndDbRepository.createListing(
         pageFetcher = pageFetcher,
-        networkPageSize = pageSize,
         databaseQueryHandler = databaseFunctionsHandler,
         db = db,
         dataSourceFactory = userDao.findUsersByName(userName)

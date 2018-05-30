@@ -1,19 +1,14 @@
 package com.xmartlabs.template.repository.inDb
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
 import android.arch.persistence.room.RoomDatabase
-import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import com.xmartlabs.template.repository.common.Listing
-import com.xmartlabs.template.repository.common.NetworkState
 import com.xmartlabs.template.repository.common.PageFetcher
-import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -22,10 +17,11 @@ class ServiceAndDbRepository<T, ServiceResponse>(
     private val databaseQueryHandler: DatabaseQueryHandler<ServiceResponse>,
     private val db: RoomDatabase,
     private val ioExecutor: Executor,
-    private val networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE) {
+    private val pagedListConfig: PagedList.Config,
+    private val firstPage: Int) {
 
   companion object {
-    private const val DEFAULT_NETWORK_PAGE_SIZE = 10
+    private const val DEFAULT_NETWORK_PAGE_SIZE = 30
 
     fun <Value, ServiceResponse> createListing(
         dataSourceFactory: DataSource.Factory<*, Value>,
@@ -33,13 +29,16 @@ class ServiceAndDbRepository<T, ServiceResponse>(
         pageFetcher: PageFetcher<ServiceResponse>,
         databaseQueryHandler: DatabaseQueryHandler<ServiceResponse>,
         ioExecutor: Executor? = null,
-        networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE): Listing<Value> {
+        firstPage: Int = 1,
+        pagedListConfig: PagedList.Config = PagedList.Config.Builder().setPageSize(DEFAULT_NETWORK_PAGE_SIZE).build()
+    ): Listing<Value> {
 
       val repository = ServiceAndDbRepository<Value, ServiceResponse>(
           pageFetcher = pageFetcher,
           databaseQueryHandler = databaseQueryHandler,
           ioExecutor = Executors.newFixedThreadPool(5),
-          networkPageSize = networkPageSize,
+          pagedListConfig = pagedListConfig,
+          firstPage = firstPage,
           db = db
       )
 
@@ -47,16 +46,16 @@ class ServiceAndDbRepository<T, ServiceResponse>(
           pageFetcher = pageFetcher,
           db = db,
           databaseQueryHandler = databaseQueryHandler,
-          networkPageSize = repository.networkPageSize,
+          pagedListConfig = pagedListConfig,
           ioExecutor = repository.ioExecutor
       )
 
-      val builder = LivePagedListBuilder(dataSourceFactory, repository.networkPageSize)
+      val builder = LivePagedListBuilder(dataSourceFactory, pagedListConfig)
           .setBoundaryCallback(boundaryCallback)
 
       val refreshTrigger = MutableLiveData<Unit>()
       val refreshState = Transformations.switchMap(refreshTrigger, {
-        repository.refresh()
+        boundaryCallback.resetData()
       })
 
       return Listing(
@@ -71,32 +70,6 @@ class ServiceAndDbRepository<T, ServiceResponse>(
           refreshState = refreshState
       )
     }
-  }
-
-  @MainThread
-  private fun refresh(): LiveData<NetworkState> {
-    val networkState = MutableLiveData<NetworkState>()
-    networkState.value = NetworkState.LOADING
-    pageFetcher.getPage(page = 1, pageSize = networkPageSize)
-        .subscribeOn(Schedulers.io())
-        .observeOn(Schedulers.io())
-        .subscribe(object : SingleObserver<ServiceResponse> {
-          override fun onSuccess(t: ServiceResponse) {
-            db.runInTransaction {
-              databaseQueryHandler.dropEntities()
-              databaseQueryHandler.saveEntities(t)
-            }
-
-            networkState.postValue(NetworkState.LOADED)
-          }
-
-          override fun onSubscribe(d: Disposable) {}
-
-          override fun onError(e: Throwable) {
-            networkState.postValue(NetworkState.error(e))
-          }
-        })
-    return networkState
   }
 }
 

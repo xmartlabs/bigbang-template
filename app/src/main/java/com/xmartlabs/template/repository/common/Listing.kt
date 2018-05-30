@@ -3,9 +3,7 @@ package com.xmartlabs.template.repository.common
 import android.arch.lifecycle.LiveData
 import android.arch.paging.PagedList
 
-/**
- * Data class that is necessary for a UI to show a listing and interact w/ the rest of the system
- */
+/** Data class that is necessary for a UI to show a listing and interact w/ the rest of the system */
 data class Listing<T>(
     // the LiveData of paged lists for the UI to observe
     val pagedList: LiveData<PagedList<T>>,
