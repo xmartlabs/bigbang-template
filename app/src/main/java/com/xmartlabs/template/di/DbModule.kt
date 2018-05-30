@@ -3,7 +3,7 @@ package com.xmartlabs.template.di
 import android.app.Application
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
-import com.xmartlabs.db.Db
+import com.xmartlabs.template.db.Db
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

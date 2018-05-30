@@ -47,7 +47,7 @@ open class App : Application(), HasActivityInjector {
   @Inject
   internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
   @Suppress("LateinitUsage")
-  internal lateinit var applicationComponent : ApplicationComponent
+  internal lateinit var applicationComponent: ApplicationComponent
 
   init {
     @Suppress("LeakingThis")
@@ -71,7 +71,6 @@ open class App : Application(), HasActivityInjector {
     initializeDataBase()
     initializeRxErrorHandler()
     initializeLogging() // Crashlytics initialization should go at the end.
-    Stetho.initializeWithDefaults(this);
   }
 
   private fun initializeInjections() {
@@ -97,6 +96,10 @@ open class App : Application(), HasActivityInjector {
     //TODO: Configure Fabric and add Fabric apiSecret and apiKey properties file in the root folder
     loggerTree.addLogger(CrashlyticsLogger().initialize(buildInfo, this))
     Timber.plant(loggerTree)
+
+    if (buildInfo.isDebug) {
+      Stetho.initializeWithDefaults(this);
+    }
   }
 
   private fun initializeRxErrorHandler() {

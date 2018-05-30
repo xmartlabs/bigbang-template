@@ -15,5 +15,5 @@ data class UserSearch(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     val search: String,
     val userId: Long,
-    val searchPosition: Int
+    val searchPosition: Long
 )

@@ -1,4 +1,4 @@
-package com.xmartlabs.db
+package com.xmartlabs.template.db
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert

@@ -41,7 +41,7 @@ class ServiceAndDatabaseBoundaryCallback<T>(private val pageFetcher: PageFetcher
   @MainThread
   override fun onItemAtEndLoaded(itemAtEnd: T) {
     helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-      pageFetcher.getPage(page = page, pageSize = networkPageSize * 3)
+      pageFetcher.getPage(page = page, pageSize = networkPageSize)
           .createWebserviceCallback(it)
     }
   }

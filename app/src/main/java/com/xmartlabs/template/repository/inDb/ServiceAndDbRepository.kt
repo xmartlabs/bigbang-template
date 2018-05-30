@@ -30,12 +30,13 @@ class ServiceAndDbRepository<T>(
   companion object {
     private const val DEFAULT_NETWORK_PAGE_SIZE = 10
 
-    fun <T> createListing(
-        dataSourceFactory: DataSource.Factory<Int, T>,
-        pageFetcher: PageFetcher<T>,
-        databaseFunctionsHandler: DatabaseFunctionsHandler<T>,
+    fun <Key, Value> createListing(
+        dataSourceFactory: DataSource.Factory<Key, Value>,
+        pageFetcher: PageFetcher<Value>,
+        databaseFunctionsHandler: DatabaseFunctionsHandler<Value>,
         ioExecutor: Executor? = null,
-        networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE): Listing<T> {
+        networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE): Listing<Value> {
+
       val repository = ServiceAndDbRepository(
           pageFetcher = pageFetcher,
           databaseFunctionsHandler = databaseFunctionsHandler,

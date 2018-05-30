@@ -35,11 +35,12 @@ interface UserDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertUserSearch(posts: List<UserSearch>)
 
-  @Query("SELECT * FROM User INNER JOIN UserSearch WHERE search=:search ORDER BY searchPosition ASC")
+  @Query("SELECT * FROM User INNER JOIN UserSearch ON User.id = UserSearch.userId " +
+      "WHERE search=:search ORDER BY searchPosition ASC")
   fun findUsersByName(search: String): DataSource.Factory<Int, User>
 
   @Query("SELECT MAX(searchPosition) + 1 FROM UserSearch WHERE search=:search")
-  fun getNextIndexInUserSearch(search: String): Int
+  fun getNextIndexInUserSearch(search: String): Long
 
   @Query("DELETE FROM UserSearch WHERE search=:search")
   fun deleteUserSearch(search: String)

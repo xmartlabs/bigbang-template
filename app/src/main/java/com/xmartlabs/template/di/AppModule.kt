@@ -1,7 +1,7 @@
 package com.xmartlabs.template.di
 
 import android.content.Context
-import com.xmartlabs.db.Db
+import com.xmartlabs.template.db.Db
 import com.xmartlabs.template.model.common.BuildInfo
 import dagger.Module
 import dagger.Provides
