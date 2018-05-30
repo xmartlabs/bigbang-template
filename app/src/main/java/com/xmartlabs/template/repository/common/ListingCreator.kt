@@ -7,7 +7,7 @@ import android.arch.paging.LivePagedListBuilder
  * Created by mirland on 28/05/18.
  */
 object ListingCreator {
-  fun <T> createListing(pageFetcher: PageFetcher<T>, pageSize: Int): Listing<T> {
+  fun <T> createListing(pageFetcher: ListResponsePageFetcher<T>, pageSize: Int): Listing<T> {
     val sourceFactory = ServicePagedDataSourceFactory(pageFetcher)
     val livePagedList = LivePagedListBuilder(sourceFactory, pageSize)
         .build()

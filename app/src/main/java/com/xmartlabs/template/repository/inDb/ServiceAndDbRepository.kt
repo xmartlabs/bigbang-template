@@ -8,24 +8,18 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.persistence.room.RoomDatabase
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import com.xmartlabs.bigbang.core.extensions.observeOnIo
-import com.xmartlabs.bigbang.core.extensions.subscribeOnIo
-import com.xmartlabs.template.model.service.ListResponse
 import com.xmartlabs.template.repository.common.Listing
 import com.xmartlabs.template.repository.common.NetworkState
 import com.xmartlabs.template.repository.common.PageFetcher
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-/**
- * Repository implementation that uses a database PagedList + a boundary callback to return a
- * listing that loads in pages.
- */
-class ServiceAndDbRepository<T>(
-    private val pageFetcher: PageFetcher<T>,
-    private val databaseFunctionsHandler: DatabaseFunctionsHandler<T>,
+class ServiceAndDbRepository<T, ServiceResponse>(
+    private val pageFetcher: PageFetcher<ServiceResponse>,
+    private val databaseQueryHandler: DatabaseQueryHandler<ServiceResponse>,
     private val db: RoomDatabase,
     private val ioExecutor: Executor,
     private val networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE) {
@@ -33,25 +27,26 @@ class ServiceAndDbRepository<T>(
   companion object {
     private const val DEFAULT_NETWORK_PAGE_SIZE = 10
 
-    fun <Key, Value> createListing(
-        dataSourceFactory: DataSource.Factory<Key, Value>,
+    fun <Value, ServiceResponse> createListing(
+        dataSourceFactory: DataSource.Factory<*, Value>,
         db: RoomDatabase,
-        pageFetcher: PageFetcher<Value>,
-        databaseFunctionsHandler: DatabaseFunctionsHandler<Value>,
+        pageFetcher: PageFetcher<ServiceResponse>,
+        databaseQueryHandler: DatabaseQueryHandler<ServiceResponse>,
         ioExecutor: Executor? = null,
         networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE): Listing<Value> {
 
-      val repository = ServiceAndDbRepository(
+      val repository = ServiceAndDbRepository<Value, ServiceResponse>(
           pageFetcher = pageFetcher,
-          databaseFunctionsHandler = databaseFunctionsHandler,
+          databaseQueryHandler = databaseQueryHandler,
           ioExecutor = Executors.newFixedThreadPool(5),
+          networkPageSize = networkPageSize,
           db = db
       )
 
-      val boundaryCallback = ServiceAndDatabaseBoundaryCallback(
+      val boundaryCallback = ServiceAndDatabaseBoundaryCallback<Value, ServiceResponse>(
           pageFetcher = pageFetcher,
           db = db,
-          databaseFunctionsHandler = databaseFunctionsHandler,
+          databaseQueryHandler = databaseQueryHandler,
           networkPageSize = repository.networkPageSize,
           ioExecutor = repository.ioExecutor
       )
@@ -83,13 +78,13 @@ class ServiceAndDbRepository<T>(
     val networkState = MutableLiveData<NetworkState>()
     networkState.value = NetworkState.LOADING
     pageFetcher.getPage(page = 1, pageSize = networkPageSize)
-        .subscribeOnIo()
-        .observeOnIo()
-        .subscribe(object : SingleObserver<ListResponse<T>> {
-          override fun onSuccess(t: ListResponse<T>) {
+        .subscribeOn(Schedulers.io())
+        .observeOn(Schedulers.io())
+        .subscribe(object : SingleObserver<ServiceResponse> {
+          override fun onSuccess(t: ServiceResponse) {
             db.runInTransaction {
-              databaseFunctionsHandler.deleteEntities()
-              databaseFunctionsHandler.saveEntities(t)
+              databaseQueryHandler.dropEntities()
+              databaseQueryHandler.saveEntities(t)
             }
 
             networkState.postValue(NetworkState.LOADED)
@@ -98,17 +93,19 @@ class ServiceAndDbRepository<T>(
           override fun onSubscribe(d: Disposable) {}
 
           override fun onError(e: Throwable) {
-            networkState.postValue(NetworkState.error(e.message))
+            networkState.postValue(NetworkState.error(e))
           }
         })
     return networkState
   }
 }
 
-interface DatabaseFunctionsHandler<T> {
+interface DatabaseQueryHandler<T> {
   @WorkerThread
-  fun saveEntities(listResponse: ListResponse<T>?)
+  fun saveEntities(response: T?)
 
   @WorkerThread
-  fun deleteEntities()
+  fun dropEntities()
+
+  fun runInTransaction(body: Runnable)
 }

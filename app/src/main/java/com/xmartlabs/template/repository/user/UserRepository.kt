@@ -6,10 +6,11 @@ import com.android.example.github.db.UserDao
 import com.xmartlabs.template.model.User
 import com.xmartlabs.template.model.UserSearch
 import com.xmartlabs.template.model.service.ListResponse
+import com.xmartlabs.template.repository.common.ListResponsePageFetcher
 import com.xmartlabs.template.repository.common.Listing
 import com.xmartlabs.template.repository.common.ListingCreator
 import com.xmartlabs.template.repository.common.PageFetcher
-import com.xmartlabs.template.repository.inDb.DatabaseFunctionsHandler
+import com.xmartlabs.template.repository.inDb.DatabaseQueryHandler
 import com.xmartlabs.template.repository.inDb.ServiceAndDbRepository
 import com.xmartlabs.template.service.UserService
 import io.reactivex.Single
@@ -24,44 +25,45 @@ class UserRepository @Inject constructor(
 ) {
   @MainThread
   fun searchServiceUsers(userName: String, pageSize: Int): Listing<User> {
-    val pageFetcher: PageFetcher<User> = (object : PageFetcher<User> {
+    val pageFetcher: ListResponsePageFetcher<User> = (object : ListResponsePageFetcher<User> {
       override fun getPage(page: Int, pageSize: Int): Single<ListResponse<User>> =
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
     return ListingCreator.createListing(pageFetcher, pageSize)
   }
 
-
   @MainThread
   fun searchServiceAndDbUsers(userName: String, pageSize: Int): Listing<User> {
-    val pageFetcher: PageFetcher<User> = (object : PageFetcher<User> {
-      override fun getPage(page: Int, pageSize: Int): Single<ListResponse<User>> =
+    val pageFetcher: PageFetcher<ListResponse<User>> = (object : PageFetcher<ListResponse<User>> {
+      override fun getPage(page: Int, pageSize: Int) =
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
 
-    val databaseFunctionsHandler = object : DatabaseFunctionsHandler<User> {
+    val databaseFunctionsHandler = object : DatabaseQueryHandler<ListResponse<User>> {
+      override fun runInTransaction(body: Runnable) {
+        db.runInTransaction(body)
+      }
+
       override fun saveEntities(listResponse: ListResponse<User>?) {
         listResponse?.items?.let { users ->
-          db.runInTransaction {
-            val start = userDao.getNextIndexInUserSearch(userName)
-            val relationItems = users
-                .mapIndexed { index, user ->
-                  UserSearch(search = userName, userId = user.id, searchPosition = start + index)
-                }
-            userDao.insert(users)
-            userDao.insertUserSearch(relationItems)
-          }
+          val start = userDao.getNextIndexInUserSearch(userName)
+          val relationItems = users
+              .mapIndexed { index, user ->
+                UserSearch(search = userName, userId = user.id, searchPosition = start + index)
+              }
+          userDao.insert(users)
+          userDao.insertUserSearch(relationItems)
         }
       }
 
-      override fun deleteEntities() {
+      override fun dropEntities() {
         userDao.deleteUserSearch(userName)
       }
     }
     return ServiceAndDbRepository.createListing(
         pageFetcher = pageFetcher,
         networkPageSize = pageSize,
-        databaseFunctionsHandler = databaseFunctionsHandler,
+        databaseQueryHandler = databaseFunctionsHandler,
         db = db,
         dataSourceFactory = userDao.findUsersByName(userName)
     )

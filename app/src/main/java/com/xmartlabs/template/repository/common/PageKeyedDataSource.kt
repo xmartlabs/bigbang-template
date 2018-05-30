@@ -7,7 +7,7 @@ import com.xmartlabs.template.model.service.ListResponse
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 
-class PageKeyedDataSource<T>(private val pageFetcher: PageFetcher<T>) : PageKeyedDataSource<Int, T>() {
+class PageKeyedDataSource<T>(private val pageFetcher: ListResponsePageFetcher<T>) : PageKeyedDataSource<Int, T>() {
   private var retry: (() -> Any)? = null
   val networkState = MutableLiveData<NetworkState>()
   val initialLoad = MutableLiveData<NetworkState>()
@@ -42,7 +42,7 @@ class PageKeyedDataSource<T>(private val pageFetcher: PageFetcher<T>) : PageKeye
             retry = {
               loadAfter(params, callback)
             }
-            networkState.postValue(NetworkState.error(t.message ?: "unknown err"))
+            networkState.postValue(NetworkState.error(t))
           }
         })
   }
@@ -68,7 +68,7 @@ class PageKeyedDataSource<T>(private val pageFetcher: PageFetcher<T>) : PageKeye
             retry = {
               loadInitial(params, callback)
             }
-            val error = NetworkState.error(t.message ?: "unknown error")
+            val error = NetworkState.error(t)
             networkState.postValue(error)
             initialLoad.postValue(error)
           }
