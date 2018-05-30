@@ -62,6 +62,7 @@ class UserRepository @Inject constructor(
         pageFetcher = pageFetcher,
         networkPageSize = pageSize,
         databaseFunctionsHandler = databaseFunctionsHandler,
+        db = db,
         dataSourceFactory = userDao.findUsersByName(userName)
     )
   }

@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
+import android.arch.persistence.room.RoomDatabase
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import com.xmartlabs.bigbang.core.extensions.observeOnIo
@@ -25,13 +26,16 @@ import java.util.concurrent.Executors
 class ServiceAndDbRepository<T>(
     private val pageFetcher: PageFetcher<T>,
     private val databaseFunctionsHandler: DatabaseFunctionsHandler<T>,
+    private val db: RoomDatabase,
     private val ioExecutor: Executor,
     private val networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE) {
+
   companion object {
     private const val DEFAULT_NETWORK_PAGE_SIZE = 10
 
     fun <Key, Value> createListing(
         dataSourceFactory: DataSource.Factory<Key, Value>,
+        db: RoomDatabase,
         pageFetcher: PageFetcher<Value>,
         databaseFunctionsHandler: DatabaseFunctionsHandler<Value>,
         ioExecutor: Executor? = null,
@@ -40,12 +44,14 @@ class ServiceAndDbRepository<T>(
       val repository = ServiceAndDbRepository(
           pageFetcher = pageFetcher,
           databaseFunctionsHandler = databaseFunctionsHandler,
-          ioExecutor = Executors.newFixedThreadPool(5)
+          ioExecutor = Executors.newFixedThreadPool(5),
+          db = db
       )
 
       val boundaryCallback = ServiceAndDatabaseBoundaryCallback(
           pageFetcher = pageFetcher,
-          handleResponse = databaseFunctionsHandler::saveEntities,
+          db = db,
+          databaseFunctionsHandler = databaseFunctionsHandler,
           networkPageSize = repository.networkPageSize,
           ioExecutor = repository.ioExecutor
       )
@@ -53,9 +59,6 @@ class ServiceAndDbRepository<T>(
       val builder = LivePagedListBuilder(dataSourceFactory, repository.networkPageSize)
           .setBoundaryCallback(boundaryCallback)
 
-      // we are using a mutable live data to trigger refresh requests which eventually calls
-      // refresh method and gets a new live data. Each refresh request by the user becomes a newly
-      // dispatched data in refreshTrigger
       val refreshTrigger = MutableLiveData<Unit>()
       val refreshState = Transformations.switchMap(refreshTrigger, {
         repository.refresh()
@@ -84,8 +87,11 @@ class ServiceAndDbRepository<T>(
         .observeOnIo()
         .subscribe(object : SingleObserver<ListResponse<T>> {
           override fun onSuccess(t: ListResponse<T>) {
-            databaseFunctionsHandler.deleteEntities()
-            databaseFunctionsHandler.saveEntities(t)
+            db.runInTransaction {
+              databaseFunctionsHandler.deleteEntities()
+              databaseFunctionsHandler.saveEntities(t)
+            }
+
             networkState.postValue(NetworkState.LOADED)
           }
 

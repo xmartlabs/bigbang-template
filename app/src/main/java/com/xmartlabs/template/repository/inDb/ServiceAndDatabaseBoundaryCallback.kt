@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PagedList
 import android.arch.paging.PagingRequestHelper
+import android.arch.persistence.room.RoomDatabase
 import android.support.annotation.MainThread
 import com.xmartlabs.bigbang.core.extensions.observeOnIo
 import com.xmartlabs.bigbang.core.extensions.subscribeOnIo
@@ -16,7 +17,8 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.Executor
 
 class ServiceAndDatabaseBoundaryCallback<T>(private val pageFetcher: PageFetcher<T>,
-                                            private val handleResponse: (ListResponse<T>?) -> Unit,
+                                            private val db: RoomDatabase,
+                                            private val databaseFunctionsHandler: DatabaseFunctionsHandler<T>,
                                             private val networkPageSize: Int,
                                             private val ioExecutor: Executor) : PagedList.BoundaryCallback<T>() {
 
@@ -24,15 +26,22 @@ class ServiceAndDatabaseBoundaryCallback<T>(private val pageFetcher: PageFetcher
   val helper = PagingRequestHelper(ioExecutor)
   val networkState = helper.createStatusLiveData()
 
+  init {
+    helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
+      pageFetcher.getPage(page = page, pageSize = networkPageSize * 3)
+          .createWebserviceCallback(it, true)
+    }
+  }
+
   /**
    * Database returned 0 items. We should query the backend for more items.
    */
   @MainThread
   override fun onZeroItemsLoaded() {
-    helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-      pageFetcher.getPage(page = page, pageSize = networkPageSize * 3)
-          .createWebserviceCallback(it)
-    }
+//    helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
+//      pageFetcher.getPage(page = page, pageSize = networkPageSize * 3)
+//          .createWebserviceCallback(it)
+//    }
   }
 
   /**
@@ -51,13 +60,19 @@ class ServiceAndDatabaseBoundaryCallback<T>(private val pageFetcher: PageFetcher
   }
 
 
-  fun Single<ListResponse<T>>.createWebserviceCallback(callback: PagingRequestHelper.Request.Callback) {
+  fun Single<ListResponse<T>>.createWebserviceCallback(callback: PagingRequestHelper.Request.Callback,
+                                                       dropDatabase: Boolean = false) {
     this.subscribeOnIo()
         .observeOnIo()
         .subscribe(object : SingleObserver<ListResponse<T>> {
           override fun onSuccess(data: ListResponse<T>) {
             page++
-            handleResponse(data)
+            db.runInTransaction {
+              if (dropDatabase) {
+                databaseFunctionsHandler.deleteEntities()
+              }
+              databaseFunctionsHandler.saveEntities(data)
+            }
             callback.recordSuccess()
           }
 
