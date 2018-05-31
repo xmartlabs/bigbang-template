@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PagedList
 import android.arch.paging.PagingRequestHelper
 import android.arch.persistence.room.RoomDatabase
+import android.support.annotation.AnyThread
 import android.support.annotation.MainThread
 import com.xmartlabs.template.repository.common.NetworkState
 import com.xmartlabs.template.repository.common.PageFetcher
@@ -14,19 +15,18 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executor
 
-class ServiceAndDatabaseBoundaryCallback<T, ServiceResponse>(private val pageFetcher: PageFetcher<ServiceResponse>,
-                                                             private val db: RoomDatabase,
-                                                             private val databaseQueryHandler: DatabaseQueryHandler<ServiceResponse>,
-                                                             private val pagedListConfig: PagedList.Config,
-                                                             private val ioExecutor: Executor,
-                                                             private val firstPage: Int = 1
+class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: PageFetcher<ServiceResponse>,
+                                           private val databaseQueryHandler: DatabaseQueryHandler<ServiceResponse>,
+                                           private val pagedListConfig: PagedList.Config,
+                                           private val ioServiceExecutor: Executor,
+                                           private val ioDatabaseExecutor: Executor,
+                                           private val firstPage: Int
 ) : PagedList.BoundaryCallback<T>() {
-
   var page = firstPage
-  var helper = PagingRequestHelper(ioExecutor)
+  var helper = PagingRequestHelper(ioServiceExecutor)
   val networkState = MutableLiveData<NetworkState>()
-  val networkStateListener: (PagingRequestHelper.StatusReport) -> Unit = {
-    report -> networkState.postValue(report.createNetworkState())
+  val networkStateListener: (PagingRequestHelper.StatusReport) -> Unit = { report ->
+    networkState.postValue(report.createNetworkState())
   }
 
   init {
@@ -38,12 +38,7 @@ class ServiceAndDatabaseBoundaryCallback<T, ServiceResponse>(private val pageFet
   }
 
   @MainThread
-  override fun onZeroItemsLoaded() {
-//    helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-//      pageFetcher.getPage(page = page, pageSize = networkPageSize * 3)
-//          .createWebserviceCallback(it)
-//    }
-  }
+  override fun onZeroItemsLoaded() {}
 
   @MainThread
   override fun onItemAtEndLoaded(itemAtEnd: T) {
@@ -57,22 +52,23 @@ class ServiceAndDatabaseBoundaryCallback<T, ServiceResponse>(private val pageFet
     // ignored, since we only ever append to what's in the DB
   }
 
-
+  @AnyThread
   fun resetData(): LiveData<NetworkState> {
     val networkState = MutableLiveData<NetworkState>()
-    networkState.value = NetworkState.LOADING
+    networkState.postValue(NetworkState.LOADING)
     pageFetcher.getPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
-        .subscribeOn(Schedulers.io())
-        .observeOn(Schedulers.io())
+        .subscribeOn(ioServiceExecutor)
+        .observeOn(ioDatabaseExecutor)
         .subscribe(object : SingleObserver<ServiceResponse> {
           override fun onSuccess(t: ServiceResponse) {
-            unsubscribePendingRequests();
-            db.runInTransaction {
+            unsubscribePendingRequests()
+            page = firstPage + 1
+            databaseQueryHandler.runInTransaction {
               databaseQueryHandler.dropEntities()
               databaseQueryHandler.saveEntities(t)
             }
             helper.removeListener(networkStateListener)
-            helper = PagingRequestHelper(ioExecutor)
+            helper = PagingRequestHelper(ioServiceExecutor)
             helper.addListener(networkStateListener)
             networkState.postValue(NetworkState.LOADED)
           }
@@ -90,6 +86,13 @@ class ServiceAndDatabaseBoundaryCallback<T, ServiceResponse>(private val pageFet
 
   }
 
+  @AnyThread
+  private fun <T> Single<T>.subscribeOn(executor: Executor) = this.subscribeOn(Schedulers.from(executor))
+
+  @AnyThread
+  private fun <T> Single<T>.observeOn(executor: Executor) = this.observeOn(Schedulers.from(executor))
+
+
   private fun Single<ServiceResponse>.createWebserviceCallback(callback: PagingRequestHelper.Request.Callback,
                                                                dropDatabase: Boolean = false) {
     this
@@ -98,7 +101,7 @@ class ServiceAndDatabaseBoundaryCallback<T, ServiceResponse>(private val pageFet
         .subscribe(object : SingleObserver<ServiceResponse> {
           override fun onSuccess(data: ServiceResponse) {
             page++
-            db.runInTransaction {
+            databaseQueryHandler.runInTransaction {
               if (dropDatabase) {
                 databaseQueryHandler.dropEntities()
               }
