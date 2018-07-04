@@ -19,11 +19,13 @@ import javax.inject.Singleton
   AndroidModule::class,
   AppModule::class,
   ControllerModule::class,
+  DbModule::class,
   GsonModule::class,
   OkHttpModule::class,
   PicassoModule::class,
   RestServiceModule::class,
   RestServiceModuleApi::class,
+  ViewModelModule::class,
   ServiceGsonModule::class
 ])
 @Singleton
@@ -35,6 +37,8 @@ interface ApplicationComponent {
 
     @BindsInstance
     fun buildInfo(buildInfo: BuildInfo): Builder
+
+    fun restServiceGsonModule(serviceGsonModule: ServiceGsonModule): Builder
 
     fun restServiceModule(restService: RestServiceModule): Builder
 

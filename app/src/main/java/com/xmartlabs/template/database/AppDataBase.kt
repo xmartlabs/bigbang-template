@@ -1,10 +1,10 @@
 package com.xmartlabs.template.database
 
-import com.raizlabs.android.dbflow.annotation.Database
+import android.arch.persistence.room.RoomDatabase
 
-@Database(name = AppDataBase.NAME, version = AppDataBase.VERSION)
-object AppDataBase {
-  //TODO: change db name
-  const val NAME = "template_database"
-  const val VERSION = 1
-}
+//@Database(
+//    entities = [],
+//    version = 1,
+//    exportSchema = false
+//)
+abstract class AppDataBase : RoomDatabase()
