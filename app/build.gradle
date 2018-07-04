@@ -158,7 +158,7 @@ final PARCELER_VERSION = '1.1.10'
 final PICASSO_VERSION = '8c16e8564e'
 final REST_MOCK = '0.3.1'
 final RETROFIT_VERSION = '2.4.0'
-final ROOM_VERSION = "1.1.0"
+final ROOM_VERSION = '1.1.0'
 final RXANDROID_VERSION = '2.0.2'
 final RXJAVA_VERSION = '2.1.14'
 final RXLIFECYCLE_VERSION = '2.2.1'
@@ -198,12 +198,12 @@ dependencies {
     androidTestImplementation "com.squareup.okio:okio:${OKIO_VERSION}" // Added to prevent dependencies conflict between main and test
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "android.arch.lifecycle:extensions:$LIFECYCLE_VERSION"
-    implementation "android.arch.lifecycle:livedata:$LIFECYCLE_VERSION"
-    implementation "android.arch.lifecycle:reactivestreams:$LIFECYCLE_VERSION"
-    implementation "android.arch.lifecycle:runtime:$LIFECYCLE_VERSION"
-    implementation "android.arch.lifecycle:viewmodel:$LIFECYCLE_VERSION"
-    implementation "android.arch.persistence.room:runtime:$ROOM_VERSION"
+    implementation "android.arch.lifecycle:extensions:${LIFECYCLE_VERSION}"
+    implementation "android.arch.lifecycle:livedata:${LIFECYCLE_VERSION}"
+    implementation "android.arch.lifecycle:reactivestreams:${LIFECYCLE_VERSION}"
+    implementation "android.arch.lifecycle:runtime:${LIFECYCLE_VERSION}"
+    implementation "android.arch.lifecycle:viewmodel:${LIFECYCLE_VERSION}"
+    implementation "android.arch.persistence.room:runtime:${ROOM_VERSION}"
     implementation "com.afollestad.material-dialogs:core:${MATERIAL_DIALOGS_VERSION}"
     implementation "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
     implementation "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
@@ -243,8 +243,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${KOTLIN_VERSION}"
     implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
 
-    kapt "android.arch.lifecycle:compiler:$LIFECYCLE_VERSION"
-    kapt "android.arch.persistence.room:compiler:$ROOM_VERSION"
+    kapt "android.arch.lifecycle:compiler:${LIFECYCLE_VERSION}"
+    kapt "android.arch.persistence.room:compiler:${ROOM_VERSION}"
     kapt "com.android.databinding:compiler:${DATABINDING_VERSION}"
     kapt "com.f2prateek.dart:dart-processor:${DART_VERSION}"
     kapt "com.f2prateek.dart:henson-processor:${DART_VERSION}"

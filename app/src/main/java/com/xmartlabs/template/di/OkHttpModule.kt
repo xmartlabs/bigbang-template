@@ -11,7 +11,6 @@ import javax.inject.Singleton
 import com.xmartlabs.bigbang.core.module.OkHttpModule as CoreOkHttpModule
 import com.facebook.stetho.okhttp3.StethoInterceptor
 
-
 @Module
 class OkHttpModule : CoreOkHttpModule() {
   @Named(SESSION_INTERCEPTOR)

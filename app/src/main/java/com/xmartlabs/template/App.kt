@@ -93,7 +93,7 @@ open class App : Application(), HasActivityInjector {
     Timber.plant(loggerTree)
 
     if (buildInfo.isDebug) {
-      Stetho.initializeWithDefaults(this);
+      Stetho.initializeWithDefaults(this)
     }
   }
 

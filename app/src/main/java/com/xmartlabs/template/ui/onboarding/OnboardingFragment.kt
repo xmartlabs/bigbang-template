@@ -12,7 +12,6 @@ import com.xmartlabs.template.extensions.ui.isLastPage
 import com.xmartlabs.template.extensions.ui.nextPage
 import com.xmartlabs.template.extensions.ui.onPageSelected
 import com.xmartlabs.template.extensions.ui.setAnimatedVisibility
-import com.xmartlabs.template.helper.EmptyOnPageChangeListener
 import com.xmartlabs.template.ui.Henson
 import kotlinx.android.synthetic.main.fragment_onboarding.*
 
@@ -32,7 +31,7 @@ class OnboardingFragment : BaseFragment() {
     listOf(startButton, skipButton)
         .forEach { it.setOnClickListener { _ -> goToLoginActivity() } }
 
-    nextButton.setOnClickListener {_ -> viewPager.nextPage() }
+    nextButton.setOnClickListener { _ -> viewPager.nextPage() }
     viewPager.onPageSelected { _ -> handleNextButtonVisibility() }
   }
 

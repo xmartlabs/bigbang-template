@@ -23,9 +23,9 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [
-  AppModule::class,
   ActivityModule::class,
   AndroidInjectionModule::class,
+  AppModule::class,
   GsonModule::class,
   MockAndroidModule::class,
   MockClockModule::class,
@@ -34,8 +34,8 @@ import javax.inject.Singleton
   PicassoModule::class,
   RestServiceModule::class,
   RestServiceModuleApi::class,
-  ViewModelModule::class,
-  ServiceGsonModule::class
+  ServiceGsonModule::class,
+  ViewModelModule::class
 ])
 interface TestComponent : ApplicationComponent {
   @Component.Builder

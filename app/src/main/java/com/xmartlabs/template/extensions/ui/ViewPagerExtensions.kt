@@ -9,9 +9,7 @@ inline fun ViewPager.nextPage() {
   currentItem++
 }
 
-inline fun ViewPager.isLastPage(): Boolean {
-  return currentItem == (adapter?.let { adapter -> adapter.count - 1 })
-}
+inline fun ViewPager.isLastPage() = currentItem == (adapter?.let { adapter -> adapter.count - 1 })
 
 inline fun ViewPager.onPageSelected(crossinline action: (position: Int) -> Unit) {
   addOnPageChangeListener(object : EmptyOnPageChangeListener() {

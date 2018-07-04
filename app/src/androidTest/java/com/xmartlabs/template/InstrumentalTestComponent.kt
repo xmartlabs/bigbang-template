@@ -34,8 +34,8 @@ import javax.inject.Singleton
   PicassoModule::class,
   RestServiceModule::class,
   RestServiceModuleApi::class,
-  ViewModelModule::class,
-  ServiceGsonModule::class
+  ServiceGsonModule::class,
+  ViewModelModule::class
 ])
 interface InstrumentalTestComponent : ApplicationComponent {
   @Component.Builder
