@@ -4,18 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import com.f2prateek.dart.HensonNavigable
 import com.xmartlabs.bigbang.ui.BaseAppCompatActivity
-import com.xmartlabs.template.repository.SessionController
+import com.xmartlabs.template.repository.SessionRepository
 import javax.inject.Inject
 
 @HensonNavigable
 class StartActivity : BaseAppCompatActivity() {
   @Inject
-  internal lateinit var sessionController: SessionController
+  internal lateinit var sessionRepository: SessionRepository
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    val session = sessionController.session
+    val session = sessionRepository.session
     if (session == null) {
       //TODO: handle on start activity no session
       val intent = Henson.with(context)

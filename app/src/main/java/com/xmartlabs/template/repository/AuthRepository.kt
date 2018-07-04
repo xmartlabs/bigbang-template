@@ -4,9 +4,9 @@ import com.xmartlabs.bigbang.core.controller.Controller
 import com.xmartlabs.template.service.AuthService
 import javax.inject.Inject
 
-open class AuthController @Inject constructor(
+open class AuthRepository @Inject constructor(
     private val authService: AuthService,
-    private val sessionController: SessionController
+    private val sessionRepository: SessionRepository
 ) : Controller() {
 
 //  //TODO: Change signature and method to match authService request to fetch the Access Token

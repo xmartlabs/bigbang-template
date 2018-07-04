@@ -3,7 +3,7 @@ package com.xmartlabs.template.tests.signin
 import com.xmartlabs.template.App
 import com.xmartlabs.template.R
 import com.xmartlabs.template.common.BaseUnitTest
-import com.xmartlabs.template.repository.AuthController
+import com.xmartlabs.template.repository.AuthRepository
 import com.xmartlabs.template.service.AuthService
 import io.appflate.restmock.RESTMockServer
 import io.appflate.restmock.RequestsVerifier
@@ -21,7 +21,7 @@ class SignInUnitTest : BaseUnitTest() {
   }
 
   @Inject
-  internal lateinit var authController: AuthController
+  internal lateinit var authRepository: AuthRepository
 
   override fun setUp() {
     super.setUp()
@@ -30,7 +30,7 @@ class SignInUnitTest : BaseUnitTest() {
 
   @Test
   fun signInTest() {
-    authController.signIn().blockingAwait()
+    authRepository.signIn().blockingAwait()
   }
 
   @Test
@@ -38,7 +38,7 @@ class SignInUnitTest : BaseUnitTest() {
     RESTMockServer.whenRequested(POST_ACCESS_TOKEN_MATCHER)
         .thenReturn(MockResponse().setResponseCode(411))
 
-    authController.accessToken
+    authRepository.accessToken
         .ignoreElement()
         .onErrorComplete()
         .blockingAwait()
