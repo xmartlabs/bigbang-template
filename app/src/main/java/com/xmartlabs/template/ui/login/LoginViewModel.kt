@@ -16,6 +16,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
       Transformations.switchMap(_login) { _ ->
         val serviceCall = MutableLiveData<NetworkState>()
         serviceCall.value = NetworkState.LOADING
+        @Suppress("MagicNumber")
         Handler().postDelayed({
           serviceCall.value = NetworkState.LOADED
         }, 3000)

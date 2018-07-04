@@ -18,16 +18,12 @@ import javax.inject.Inject
 @FragmentWithArgs
 class LoginFragment : BaseFragment() {
   @Inject
-  lateinit var viewModelFactory: ViewModelProvider.Factory
-
-  private lateinit var userViewModel: LoginViewModel
+  lateinit var userViewModel: LoginViewModel
 
   override val layoutResId = R.layout.fragment_login
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    userViewModel = ViewModelProviders.of(this, viewModelFactory)
-        .get(LoginViewModel::class.java)
 
     userViewModel.login.observe(this, Observer { state ->
       when (state) {
