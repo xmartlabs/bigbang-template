@@ -13,6 +13,7 @@ import com.xmartlabs.template.di.MockClockModule
 import com.xmartlabs.template.di.MockControllerModule
 import com.xmartlabs.template.di.OkHttpModule
 import com.xmartlabs.template.di.RestServiceModuleApi
+import com.xmartlabs.template.di.ViewModelModule
 import com.xmartlabs.template.model.common.BuildInfo
 import com.xmartlabs.template.tests.signin.SignInUnitTest
 import dagger.BindsInstance
@@ -33,6 +34,7 @@ import javax.inject.Singleton
   PicassoModule::class,
   RestServiceModule::class,
   RestServiceModuleApi::class,
+  ViewModelModule::class,
   ServiceGsonModule::class
 ])
 interface TestComponent : ApplicationComponent {
@@ -43,6 +45,8 @@ interface TestComponent : ApplicationComponent {
 
     @BindsInstance
     fun buildInfo(buildInfo: BuildInfo): Builder
+
+    fun restServiceGsonModule(serviceGsonModule: ServiceGsonModule): Builder
 
     fun restServiceModule(restService: RestServiceModule): Builder
 
