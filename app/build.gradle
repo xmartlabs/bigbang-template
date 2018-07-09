@@ -214,8 +214,8 @@ dependencies {
     }
     implementation "com.f2prateek.dart:dart:${DART_VERSION}"
     implementation "com.f2prateek.dart:henson:${DART_VERSION}"
-    implementation "com.facebook.stetho:stetho-okhttp3:$STETHO_VERSION"
-    implementation "com.facebook.stetho:stetho:$STETHO_VERSION"
+    implementation "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
+    implementation "com.facebook.stetho:stetho:${STETHO_VERSION}"
     implementation "com.github.mrmike:Ok2Curl:${OK_HTTP_2_CURL_VERSION}"
     implementation "com.github.square.picasso:picasso:${PICASSO_VERSION}"
     implementation "com.github.xmartlabs.bigbang:core:${BIGBANG_VERSION}"
