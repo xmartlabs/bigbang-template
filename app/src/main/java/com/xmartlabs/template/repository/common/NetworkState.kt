@@ -9,10 +9,8 @@ enum class Status {
 @Suppress("DataClassPrivateConstructor")
 data class NetworkState private constructor(
     val status: Status,
-    val throwable: Throwable? = null) {
-  val msg: String?
-    get() = throwable?.message
-
+    val throwable: Throwable? = null
+) {
   companion object {
     val LOADED = NetworkState(Status.SUCCESS)
     val LOADING = NetworkState(Status.RUNNING)
