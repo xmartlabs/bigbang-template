@@ -8,7 +8,7 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
         classpath 'com.google.gms:google-services:3.3.1'
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
-        classpath 'io.fabric.tools:gradle:1.25.4'
+        classpath 'io.fabric.tools:gradle:1.26.1'
     }
 }
 
@@ -197,7 +197,7 @@ dependencies {
     implementation "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
     implementation "com.android.support:multidex:${MULTIDEX_VERSION}"
     implementation "com.android.support:support-v13:${ANDROID_SUPPORT_VERSION}"
-    implementation("com.crashlytics.sdk.android:crashlytics:2.9.3@aar") {
+    implementation("com.crashlytics.sdk.android:crashlytics:2.9.5@aar") {
         transitive = true
     }
     implementation "com.f2prateek.dart:dart:${DART_VERSION}"
