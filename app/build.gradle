@@ -1,14 +1,15 @@
 buildscript {
     repositories {
+        google()
         jcenter()
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+        classpath 'com.google.gms:google-services:4.2.0'
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
-        classpath 'io.fabric.tools:gradle:1.25.4'
+        classpath 'io.fabric.tools:gradle:1.26.1'
     }
 }
 
@@ -46,10 +47,10 @@ def getSignInformation = { keystorePath, keystorePropertyPath ->
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.2'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.xmartlabs.template"
-        minSdkVersion 19
+        minSdkVersion 21
         multiDexEnabled true
         targetSdkVersion 27
         versionCode 1
@@ -86,28 +87,17 @@ android {
             // signingConfig signingConfigs.release
         }
     }
-    flavorDimensions 'version', 'env'
+    flavorDimensions 'env'
     productFlavors {
         //noinspection GroovyMissingReturnStatement
         production {
             dimension 'env'
         }
-
         staging {
             dimension 'env'
             applicationIdSuffix '.staging'
         }
-
-        lollipopAndAbove {
-            dimension 'version'
-            minSdkVersion 21 // For faster multidex compilation
-        }
-
-        allVersions {
-            dimension 'version'
-        }
     }
-    //noinspection GroovyMissingReturnStatement
     lintOptions {
         warning 'InvalidPackage'
     }
@@ -133,32 +123,31 @@ android {
 
 final ANDROID_SUPPORT_TEST_VERSION = '1.0.2'
 final ANDROID_SUPPORT_VERSION = '27.1.1'
-final BIGBANG_VERSION = '818536c5d4'
-final BULLET_VERSION = 'e5044b53df'
-final DAGGER_VERSION = '2.11'
+final BIGBANG_VERSION = '7270230d77'
+final DAGGER_VERSION = '2.16'
 final DART_VERSION = '2.0.3'
 final DBFLOW_VERSION = '4.2.4'
 final ESPRESSO_VERSION = '3.0.2'
 final FRAGMENTARGS_VERSION = '3.0.2'
-final GSON_VERSION = '2.8.2'
+final GSON_VERSION = '2.8.5'
 final JUNIT_VERSION = '4.12'
-final KOTLIN_VERSION = '1.2.0'
-final LOCALDATE_BACKPORT_VERSION = '1.1.0'
+final KOTLIN_VERSION = '1.2.71'
+final LOCALDATE_BACKPORT_VERSION = '1.1.1'
 final MATERIAL_DIALOGS_VERSION = '0.9.6.0'
-final MOCKITO_VERSION = '2.16.0'
+final MOCKITO_VERSION = '2.23.0'
 final MULTIDEX_VERSION = '1.0.3'
 final OK_HTTP_2_CURL_VERSION = '0.4.5'
 final OK_HTTP_IDLING_RESOURCE_VERSION = '1.0.0'
-final OK_HTTP_VERSION = '3.10.0'
-final OKIO_VERSION = '1.14.0'
-final PARCELER_VERSION = '1.1.10'
+final OK_HTTP_VERSION = '3.11.0'
+final OKIO_VERSION = '2.1.0'
+final PARCELER_VERSION = '1.1.11'
 final PICASSO_VERSION = '8c16e8564e'
-final REST_MOCK = '0.3.1'
+final REST_MOCK = '0.3.2'
 final RETROFIT_VERSION = '2.4.0'
-final RXANDROID_VERSION = '2.0.2'
-final RXJAVA_VERSION = '2.1.13'
-final RXLIFECYCLE_VERSION = '2.2.1'
-final TIMBER_VERSION = '4.7.0'
+final RXANDROID_VERSION = '2.1.0'
+final RXJAVA_VERSION = '2.2.0'
+final RXLIFECYCLE_VERSION = '2.2.2'
+final TIMBER_VERSION = '4.7.1'
 final TRACEUR_VERSION = '273cc7d582'
 
 dependencies {
@@ -196,9 +185,8 @@ dependencies {
     implementation "com.afollestad.material-dialogs:core:${MATERIAL_DIALOGS_VERSION}"
     implementation "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
     implementation "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
-    implementation "com.android.support:multidex:${MULTIDEX_VERSION}"
     implementation "com.android.support:support-v13:${ANDROID_SUPPORT_VERSION}"
-    implementation("com.crashlytics.sdk.android:crashlytics:2.9.2@aar") {
+    implementation("com.crashlytics.sdk.android:crashlytics:2.9.6@aar") {
         transitive = true
     }
     implementation "com.f2prateek.dart:dart:${DART_VERSION}"
@@ -207,7 +195,6 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW_VERSION}"
     implementation "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW_VERSION}"
     implementation "com.github.square.picasso:picasso:${PICASSO_VERSION}"
-    implementation "com.github.tbroyer.bullet:bullet:${BULLET_VERSION}"
     implementation "com.github.xmartlabs.bigbang:core:${BIGBANG_VERSION}"
     implementation "com.github.xmartlabs.bigbang:dbflow:${BIGBANG_VERSION}"
     implementation "com.github.xmartlabs.bigbang:log-crashlytics:${BIGBANG_VERSION}"
@@ -216,6 +203,7 @@ dependencies {
     implementation "com.github.xmartlabs:Traceur:${TRACEUR_VERSION}"
     implementation "com.google.code.gson:gson:${GSON_VERSION}"
     implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
+    implementation "com.google.dagger:dagger-android-support:${DAGGER_VERSION}"
     implementation "com.hannesdorfmann.fragmentargs:annotation:${FRAGMENTARGS_VERSION}"
     implementation "com.hannesdorfmann.fragmentargs:bundler-parceler:${FRAGMENTARGS_VERSION}"
     implementation "com.jakewharton.threetenabp:threetenabp:${LOCALDATE_BACKPORT_VERSION}"
@@ -230,21 +218,21 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle:${RXLIFECYCLE_VERSION}"
     implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}"
     implementation "io.reactivex.rxjava2:rxjava:${RXJAVA_VERSION}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${KOTLIN_VERSION}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${KOTLIN_VERSION}"
     implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
 
     kapt "com.f2prateek.dart:dart-processor:${DART_VERSION}"
     kapt "com.f2prateek.dart:henson-processor:${DART_VERSION}"
-    kapt "com.github.tbroyer.bullet:bullet-compiler:${BULLET_VERSION}"
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW_VERSION}"
+    kapt "com.google.dagger:dagger-android-processor:${DAGGER_VERSION}"
     kapt "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
     kapt "com.hannesdorfmann.fragmentargs:processor:${FRAGMENTARGS_VERSION}"
     kapt "org.parceler:parceler:${PARCELER_VERSION}"
 
-    kaptAndroidTest "com.github.tbroyer.bullet:bullet-compiler:${BULLET_VERSION}"
+    kaptAndroidTest "com.google.dagger:dagger-android-processor:${DAGGER_VERSION}"
     kaptAndroidTest "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
-    kaptTest "com.github.tbroyer.bullet:bullet-compiler:${BULLET_VERSION}"
+    kaptTest "com.google.dagger:dagger-android-processor:${DAGGER_VERSION}"
     kaptTest "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
     implementation 'javax.annotation:jsr250-api:1.0'

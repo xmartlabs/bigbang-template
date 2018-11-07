@@ -1,33 +1,33 @@
 package com.xmartlabs.template
 
+import android.app.Activity
 import android.app.Application
-import android.content.Context
-import android.os.Build
 import android.support.annotation.VisibleForTesting
-import android.support.multidex.MultiDex
-import bullet.ObjectGraph
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.tspoon.traceur.Traceur
 import com.tspoon.traceur.TraceurConfig
-import com.xmartlabs.bigbang.core.Injector
+import com.xmartlabs.bigbang.core.di.AppInjector
 import com.xmartlabs.bigbang.core.helper.GeneralErrorHelper
 import com.xmartlabs.bigbang.core.log.LoggerTree
-import com.xmartlabs.bigbang.core.model.BuildInfo
 import com.xmartlabs.bigbang.log.crashlytics.CrashlyticsLogger
 import com.xmartlabs.bigbang.retrofit.helper.ServiceErrorHandler
-import com.xmartlabs.template.module.AndroidModule
-import com.xmartlabs.template.module.OkHttpModule
-import com.xmartlabs.template.module.RestServiceModule
-import com.xmartlabs.template.module.ServiceGsonModule
+import com.xmartlabs.template.di.ApplicationComponent
+import com.xmartlabs.template.di.DaggerApplicationComponent
+import com.xmartlabs.template.di.OkHttpModule
+import com.xmartlabs.template.di.RestServiceModule
+import com.xmartlabs.template.model.common.BuildInfo
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import timber.log.Timber
 import javax.inject.Inject
 
-open class App : Application() {
+open class App : Application(), HasActivityInjector {
   companion object {
     @Suppress("LateinitUsage")
-    @JvmStatic lateinit var context: App
+    @JvmStatic
+    lateinit var context: App
       @VisibleForTesting internal set
   }
 
@@ -39,19 +39,17 @@ open class App : Application() {
   internal lateinit var loggerTree: LoggerTree
   @Inject
   internal lateinit var serviceErrorHandler: ServiceErrorHandler
+  @Inject
+  internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+  @Suppress("LateinitUsage")
+  internal lateinit var applicationComponent : ApplicationComponent
 
   init {
     @Suppress("LeakingThis")
     context = this
   }
 
-  override fun attachBaseContext(base: Context) {
-    super.attachBaseContext(base)
-
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || !BuildConfig.DEBUG) {
-      MultiDex.install(this)
-    }
-  }
+  override fun activityInjector() = dispatchingAndroidInjector
 
   override fun onCreate() {
     super.onCreate()
@@ -63,21 +61,18 @@ open class App : Application() {
   }
 
   private fun initializeInjections() {
-    val component = createComponent()
-    Injector.instance.bullet = createBullet(component)
-    Injector.inject(this)
+    applicationComponent = createComponent()
+    applicationComponent.inject(this)
+    AppInjector.init(this)
   }
 
   @VisibleForTesting
   protected open fun createComponent(): ApplicationComponent = DaggerApplicationComponent.builder()
-      .coreAndroidModule(AndroidModule(this))
-      .restServiceModule(RestServiceModule())
+      .application(this)
+      .buildInfo(BuildInfo())
       .okHttpModule(OkHttpModule())
-      .serviceGsonModule(ServiceGsonModule())
+      .restServiceModule(RestServiceModule())
       .build()
-
-  @VisibleForTesting
-  protected open fun createBullet(component: ApplicationComponent): ObjectGraph = BulletApplicationComponent(component)
 
   private fun initializeDataBase() = FlowManager.init(FlowConfig.Builder(this).build())
 
