@@ -96,7 +96,7 @@ android {
             dimension 'env'
             applicationIdSuffix '.staging'
         }
-    }    //noinspection GroovyMissingReturnStatement
+    }
     lintOptions {
         warning 'InvalidPackage'
     }
