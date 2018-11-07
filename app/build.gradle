@@ -1,12 +1,13 @@
 buildscript {
     repositories {
+        google()
         jcenter()
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
-        classpath 'com.google.gms:google-services:4.0.1'
+        classpath 'com.google.gms:google-services:4.2.0'
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
         classpath 'io.fabric.tools:gradle:1.26.1'
     }
@@ -126,7 +127,7 @@ final BIGBANG_VERSION = '7270230d77'
 final DAGGER_VERSION = '2.19'
 final DART_VERSION = '2.0.3'
 final DBFLOW_VERSION = '4.2.4'
-final ESPRESSO_VERSION = '3.0.1'
+final ESPRESSO_VERSION = '3.0.2'
 final FRAGMENTARGS_VERSION = '3.0.2'
 final GSON_VERSION = '2.8.5'
 final JUNIT_VERSION = '4.12'
@@ -141,11 +142,11 @@ final OK_HTTP_VERSION = '3.11.0'
 final OKIO_VERSION = '2.1.0'
 final PARCELER_VERSION = '1.1.11'
 final PICASSO_VERSION = '8c16e8564e'
-final REST_MOCK = '0.3.1'
+final REST_MOCK = '0.3.2'
 final RETROFIT_VERSION = '2.4.0'
-final RXANDROID_VERSION = '2.0.2'
+final RXANDROID_VERSION = '2.1.0'
 final RXJAVA_VERSION = '2.2.0'
-final RXLIFECYCLE_VERSION = '2.2.1'
+final RXLIFECYCLE_VERSION = '2.2.2'
 final TIMBER_VERSION = '4.7.1'
 final TRACEUR_VERSION = '273cc7d582'
 
