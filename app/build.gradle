@@ -46,10 +46,10 @@ def getSignInformation = { keystorePath, keystorePropertyPath ->
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.xmartlabs.template"
-        minSdkVersion 19
+        minSdkVersion 21
         multiDexEnabled true
         targetSdkVersion 27
         versionCode 1
@@ -86,28 +86,17 @@ android {
             // signingConfig signingConfigs.release
         }
     }
-    flavorDimensions 'version', 'env'
+    flavorDimensions 'env'
     productFlavors {
         //noinspection GroovyMissingReturnStatement
         production {
             dimension 'env'
         }
-
         staging {
             dimension 'env'
             applicationIdSuffix '.staging'
         }
-
-        lollipopAndAbove {
-            dimension 'version'
-            minSdkVersion 21 // For faster multidex compilation
-        }
-
-        allVersions {
-            dimension 'version'
-        }
     }
-    //noinspection GroovyMissingReturnStatement
     lintOptions {
         warning 'InvalidPackage'
     }
@@ -195,7 +184,6 @@ dependencies {
     implementation "com.afollestad.material-dialogs:core:${MATERIAL_DIALOGS_VERSION}"
     implementation "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
     implementation "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
-    implementation "com.android.support:multidex:${MULTIDEX_VERSION}"
     implementation "com.android.support:support-v13:${ANDROID_SUPPORT_VERSION}"
     implementation("com.crashlytics.sdk.android:crashlytics:2.9.6@aar") {
         transitive = true
