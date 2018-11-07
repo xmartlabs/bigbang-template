@@ -2,10 +2,7 @@ package com.xmartlabs.template
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
-import android.os.Build
 import android.support.annotation.VisibleForTesting
-import android.support.multidex.MultiDex
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -53,14 +50,6 @@ open class App : Application(), HasActivityInjector {
   }
 
   override fun activityInjector() = dispatchingAndroidInjector
-
-  override fun attachBaseContext(base: Context) {
-    super.attachBaseContext(base)
-
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || !BuildConfig.DEBUG) {
-      MultiDex.install(this)
-    }
-  }
 
   override fun onCreate() {
     super.onCreate()

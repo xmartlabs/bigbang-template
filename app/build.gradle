@@ -5,8 +5,8 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'com.google.gms:google-services:3.3.1'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+        classpath 'com.google.gms:google-services:4.0.1'
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
         classpath 'io.fabric.tools:gradle:1.26.1'
     }
@@ -46,10 +46,10 @@ def getSignInformation = { keystorePath, keystorePropertyPath ->
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.xmartlabs.template"
-        minSdkVersion 19
+        minSdkVersion 21
         multiDexEnabled true
         targetSdkVersion 27
         versionCode 1
@@ -86,28 +86,17 @@ android {
             // signingConfig signingConfigs.release
         }
     }
-    flavorDimensions 'version', 'env'
+    flavorDimensions 'env'
     productFlavors {
         //noinspection GroovyMissingReturnStatement
         production {
             dimension 'env'
         }
-
         staging {
             dimension 'env'
             applicationIdSuffix '.staging'
         }
-
-        lollipopAndAbove {
-            dimension 'version'
-            minSdkVersion 21 // For faster multidex compilation
-        }
-
-        allVersions {
-            dimension 'version'
-        }
     }
-    //noinspection GroovyMissingReturnStatement
     lintOptions {
         warning 'InvalidPackage'
     }
@@ -141,21 +130,21 @@ final ESPRESSO_VERSION = '3.0.1'
 final FRAGMENTARGS_VERSION = '3.0.2'
 final GSON_VERSION = '2.8.5'
 final JUNIT_VERSION = '4.12'
-final KOTLIN_VERSION = '1.2.0'
-final LOCALDATE_BACKPORT_VERSION = '1.1.0'
+final KOTLIN_VERSION = '1.2.71'
+final LOCALDATE_BACKPORT_VERSION = '1.1.1'
 final MATERIAL_DIALOGS_VERSION = '0.9.6.0'
-final MOCKITO_VERSION = '2.16.0'
+final MOCKITO_VERSION = '2.23.0'
 final MULTIDEX_VERSION = '1.0.3'
 final OK_HTTP_2_CURL_VERSION = '0.4.5'
 final OK_HTTP_IDLING_RESOURCE_VERSION = '1.0.0'
 final OK_HTTP_VERSION = '3.11.0'
-final OKIO_VERSION = '1.14.1'
-final PARCELER_VERSION = '1.1.10'
+final OKIO_VERSION = '2.1.0'
+final PARCELER_VERSION = '1.1.11'
 final PICASSO_VERSION = '8c16e8564e'
 final REST_MOCK = '0.3.1'
 final RETROFIT_VERSION = '2.4.0'
 final RXANDROID_VERSION = '2.0.2'
-final RXJAVA_VERSION = '2.1.14'
+final RXJAVA_VERSION = '2.2.0'
 final RXLIFECYCLE_VERSION = '2.2.1'
 final TIMBER_VERSION = '4.7.1'
 final TRACEUR_VERSION = '273cc7d582'
@@ -195,9 +184,8 @@ dependencies {
     implementation "com.afollestad.material-dialogs:core:${MATERIAL_DIALOGS_VERSION}"
     implementation "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
     implementation "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
-    implementation "com.android.support:multidex:${MULTIDEX_VERSION}"
     implementation "com.android.support:support-v13:${ANDROID_SUPPORT_VERSION}"
-    implementation("com.crashlytics.sdk.android:crashlytics:2.9.5@aar") {
+    implementation("com.crashlytics.sdk.android:crashlytics:2.9.6@aar") {
         transitive = true
     }
     implementation "com.f2prateek.dart:dart:${DART_VERSION}"
