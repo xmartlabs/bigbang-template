@@ -1,32 +1,48 @@
 package com.xmartlabs.template.ui.login
 
+import android.arch.lifecycle.Observer
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
+import com.xmartlabs.bigbang.ui.BaseFragment
 import com.xmartlabs.template.App
 import com.xmartlabs.template.R
+import com.xmartlabs.template.repository.common.NetworkState
 import com.xmartlabs.template.ui.Henson
-import com.xmartlabs.template.ui.common.TemplateFragment
 import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject
 
 @FragmentWithArgs
-class LoginFragment : TemplateFragment<LoginView, LoginPresenter>(), LoginView {
+class LoginFragment : BaseFragment() {
   @Inject
-  override lateinit var presenter: LoginPresenter
+  lateinit var userViewModel: LoginViewModel
 
   override val layoutResId = R.layout.fragment_login
 
-  override fun setup() {
-    loginButton.setOnClickListener { presenter.loginButtonClicked() }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    userViewModel.login.observe(this, Observer { state ->
+      when (state) {
+        NetworkState.LOADING -> setIsLoading(true)
+        NetworkState.LOADED -> gotoRecyclerExampleActivity()
+      }
+    })
+
+    loginButton.setOnClickListener { _ ->
+      if (!username.text.isEmpty() && !password.text.isEmpty()) {
+        userViewModel.login(username.text.toString(), password.text.toString())
+      }
+    }
   }
 
-  override fun setIsLoading(loading: Boolean) {
+  fun setIsLoading(loading: Boolean) {
     loginButton.visibility = if (loading) View.GONE else View.VISIBLE
     progressBar.visibility = if (loading) View.VISIBLE else View.GONE
   }
 
-  override fun gotoRecyclerExampleActivity() {
+  fun gotoRecyclerExampleActivity() {
     val intent = Henson.with(App.context)
         .gotoRecyclerExampleActivity()
         .build()

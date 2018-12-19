@@ -1,75 +1,54 @@
 package com.xmartlabs.template.ui.onboarding
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
+import com.xmartlabs.bigbang.ui.BaseFragment
 import com.xmartlabs.template.App
 import com.xmartlabs.template.R
-import com.xmartlabs.template.helper.EmptyOnPageChangeListener
+import com.xmartlabs.template.extensions.ui.hasInvisibleAlpha
+import com.xmartlabs.template.extensions.ui.isLastPage
+import com.xmartlabs.template.extensions.ui.nextPage
+import com.xmartlabs.template.extensions.ui.onPageSelected
+import com.xmartlabs.template.extensions.ui.setAnimatedVisibility
 import com.xmartlabs.template.ui.Henson
-import com.xmartlabs.template.ui.common.TemplateFragment
 import kotlinx.android.synthetic.main.fragment_onboarding.*
-import javax.inject.Inject
 
 @FragmentWithArgs
-class OnboardingFragment : TemplateFragment<OnboardingView, OnboardingPresenter>(), OnboardingView {
+class OnboardingFragment : BaseFragment() {
   companion object {
-    private const val ALPHA_INVISIBLE = 0.01f
-    private const val ALPHA_OPAQUE = 1.0f
     private const val ALPHA_START_DELAY_MILLISECONDS: Long = 100
   }
 
-  @Inject
-  override lateinit var presenter: OnboardingPresenter
-
   override val layoutResId = R.layout.fragment_onboarding
 
-  override fun createPageAdapter() = OnboardingPageAdapter(childFragmentManager)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
-  override fun setup(pageAdapter: OnboardingPageAdapter) {
-    viewPager.adapter = pageAdapter
-    listOf(startButton, nextButton).forEach { it.setOnClickListener { presenter.nextButtonPressed() } }
-    skipButton.setOnClickListener { presenter.skipButtonPressed() }
-    viewPager.addOnPageChangeListener(object : EmptyOnPageChangeListener() {
-      override fun onPageSelected(position: Int) = presenter.pageChanged(position)
-    })
+    viewPager.adapter = OnboardingPageAdapter(childFragmentManager)
+
+    listOf(startButton, skipButton)
+        .forEach { it.setOnClickListener { _ -> goToLoginActivity() } }
+
+    nextButton.setOnClickListener { _ -> viewPager.nextPage() }
+    viewPager.onPageSelected { _ -> handleNextButtonVisibility() }
   }
 
-  override fun setSkipButtonVisibility(visible: Boolean) {
-    @Suppress("ComplexCondition")
-    if (visible && skipButton.alpha == ALPHA_OPAQUE || !visible && skipButton.alpha == View.INVISIBLE.toFloat()) {
-      return
-    }
-
-    skipButton.animate()
-        .alpha(if (visible) ALPHA_OPAQUE else ALPHA_INVISIBLE)
-        .start()
-  }
-
-  override fun moveToPage(page: Int) {
-    viewPager.setCurrentItem(page, true)
-    handleNextButtonVisibility()
-  }
-
-  override fun handleNextButtonVisibility() {
-    if (presenter.isLastPage) {
+  private fun handleNextButtonVisibility() {
+    if (viewPager.isLastPage()) {
       swapView(nextButton, startButton)
-    } else if (nextButton.alpha <= ALPHA_INVISIBLE) {
+    } else if (nextButton.hasInvisibleAlpha() || nextButton.visibility == View.INVISIBLE) {
       swapView(startButton, nextButton)
     }
   }
 
   private fun swapView(fromView: View, toView: View) {
-    fromView.animate()
-        .alpha(ALPHA_INVISIBLE)
-        .start()
-    toView.animate()
-        .alpha(ALPHA_OPAQUE)
-        .setStartDelay(ALPHA_START_DELAY_MILLISECONDS)
-        .start()
+    fromView.visibility = View.INVISIBLE
+    toView.setAnimatedVisibility(true, ALPHA_START_DELAY_MILLISECONDS)
   }
 
-  override fun goToLoginActivity() {
+  fun goToLoginActivity() {
     val intent = Henson.with(App.context)
         .gotoLoginActivity()
         .build()

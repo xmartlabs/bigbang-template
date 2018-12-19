@@ -6,9 +6,8 @@ import android.content.Context
 import android.os.Build
 import android.support.annotation.VisibleForTesting
 import android.support.multidex.MultiDex
+import com.facebook.stetho.Stetho
 import com.jakewharton.threetenabp.AndroidThreeTen
-import com.raizlabs.android.dbflow.config.FlowConfig
-import com.raizlabs.android.dbflow.config.FlowManager
 import com.tspoon.traceur.Traceur
 import com.tspoon.traceur.TraceurConfig
 import com.xmartlabs.bigbang.core.di.AppInjector
@@ -20,6 +19,7 @@ import com.xmartlabs.template.di.ApplicationComponent
 import com.xmartlabs.template.di.DaggerApplicationComponent
 import com.xmartlabs.template.di.OkHttpModule
 import com.xmartlabs.template.di.RestServiceModule
+import com.xmartlabs.template.di.ServiceGsonModule
 import com.xmartlabs.template.model.common.BuildInfo
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -45,7 +45,7 @@ open class App : Application(), HasActivityInjector {
   @Inject
   internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
   @Suppress("LateinitUsage")
-  internal lateinit var applicationComponent : ApplicationComponent
+  internal lateinit var applicationComponent: ApplicationComponent
 
   init {
     @Suppress("LeakingThis")
@@ -66,7 +66,6 @@ open class App : Application(), HasActivityInjector {
     super.onCreate()
     initializeThreeTenABP()
     initializeInjections()
-    initializeDataBase()
     initializeRxErrorHandler()
     initializeLogging() // Crashlytics initialization should go at the end.
   }
@@ -82,10 +81,9 @@ open class App : Application(), HasActivityInjector {
       .application(this)
       .buildInfo(BuildInfo())
       .okHttpModule(OkHttpModule())
+      .restServiceGsonModule(ServiceGsonModule())
       .restServiceModule(RestServiceModule())
       .build()
-
-  private fun initializeDataBase() = FlowManager.init(FlowConfig.Builder(this).build())
 
   private fun initializeThreeTenABP() = AndroidThreeTen.init(this)
 
@@ -93,6 +91,10 @@ open class App : Application(), HasActivityInjector {
     //TODO: Configure Fabric and add Fabric apiSecret and apiKey properties file in the root folder
     loggerTree.addLogger(CrashlyticsLogger().initialize(buildInfo, this))
     Timber.plant(loggerTree)
+
+    if (buildInfo.isDebug) {
+      Stetho.initializeWithDefaults(this)
+    }
   }
 
   private fun initializeRxErrorHandler() {

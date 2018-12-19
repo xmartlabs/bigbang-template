@@ -21,4 +21,6 @@
     <string name="error_service_call_generic">Could not connect to the server. Please try again.</string>
     <string name="android_mipmap_image">android_mipmap_image</string>
     <string name="example_empty_view">Empty View Example</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
 </resources>

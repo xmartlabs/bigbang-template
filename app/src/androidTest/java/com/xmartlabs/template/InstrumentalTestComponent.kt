@@ -14,6 +14,7 @@ import com.xmartlabs.template.di.MockClockModule
 import com.xmartlabs.template.di.MockControllerModule
 import com.xmartlabs.template.di.OkHttpModule
 import com.xmartlabs.template.di.RestServiceModuleApi
+import com.xmartlabs.template.di.ViewModelModule
 import com.xmartlabs.template.model.common.BuildInfo
 import dagger.BindsInstance
 import dagger.Component
@@ -33,7 +34,8 @@ import javax.inject.Singleton
   PicassoModule::class,
   RestServiceModule::class,
   RestServiceModuleApi::class,
-  ServiceGsonModule::class
+  ServiceGsonModule::class,
+  ViewModelModule::class
 ])
 interface InstrumentalTestComponent : ApplicationComponent {
   @Component.Builder
